@@ -1,0 +1,25 @@
+{
+  "name": "covid19-liberia",
+  "version": "1.0.0",
+  "description": "COVID-19 Liberia visualisation",
+  "author": "Mark Brough",
+  "private": true,
+  "scripts": {
+    "dev": "nuxt",
+    "build": "nuxt build",
+    "start": "nuxt start",
+    "generate": "nuxt generate",
+    "gen-subdomain": "DEPLOY_ENV=WITH_SUBFOLDER nuxt generate",
+    "deploy": "push-dir --dir=dist --branch=gh-pages --cleanup"
+  },
+  "dependencies": {
+    "@nuxtjs/axios": "^5.3.6",
+    "bootstrap": "^4.1.3",
+    "bootstrap-vue": "^2.0.0",
+    "chart.js": "^2.9.3",
+    "csvtojson": "^2.0.10",
+    "nuxt": "^2.0.0",
+    "vue-chartjs": "^3.5.0"
+  },
+  "devDependencies": {}
+}
