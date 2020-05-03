@@ -26,7 +26,7 @@
       <b-container>
         <b-row>
           <b-col class="mt-2 mb-2">
-            <img src="logo_mfdp.png" />
+            <img src="logo_mfdp.png" width="250px" />
           </b-col>
         </b-row>
       </b-container>
