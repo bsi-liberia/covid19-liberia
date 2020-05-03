@@ -18,13 +18,10 @@ export default {
       { name: 'twitter:site', content: '@mfdp_lib' },
       { name: 'twitter:title', content: 'COVID-19 Response Liberia' },
       { name: 'twitter:description', content: "A dashboard of revenue and expenditure data for the COVID-19 response in Liberia." },
-      { name: 'twitter:image', content: 'https://covidresponseliberia.org/visualisation.png?v=1' },
-      { name: 'twitter:image:alt', content: 'Revenue for the COVID-19 response.' },
       { property: 'og:url', content: 'https://covidresponseliberia.org' },
       { property: 'og:title', content: 'COVID-19 Response Liberia' },
       { property: 'og:type', content: 'website' },
       { property: 'og:description', content: "A dashboard of revenue and expenditure data for the COVID-19 response in Liberia." },
-      { property: 'og:image', content: 'https://covidresponseliberia.org/visualisation.png?v=1' },
       { property: 'og:image:alt', content: 'Revenue for the COVID-19 response.' },
     ],
     link: [
