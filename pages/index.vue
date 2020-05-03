@@ -28,7 +28,7 @@
     'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   display: block;
   font-weight: 300;
-  font-size: 80px;
+  font-size: 4rem;
   letter-spacing: 1px;
 }
 
