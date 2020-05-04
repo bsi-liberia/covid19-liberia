@@ -102,11 +102,12 @@ export default {
             }
           ]
         }
+      const legend = {
+        display: true
+      }
       return {
         maintainAspectRatio: false,
-        legend: {
-          display: true
-        },
+        legend: this.chartType == 'pie' ? legend : null,
         tooltips: tooltips,
         scales: this.chartType == 'bar' ? scales : null
       }
