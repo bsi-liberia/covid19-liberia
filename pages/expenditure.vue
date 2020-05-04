@@ -4,21 +4,23 @@
       <h2>Expenditure</h2>
       <b-row class="mb-2">
         <b-col md="8">
-          <b-form-group
-            label="Show breakdown by">
-            <b-form-select v-model="expenditureBreakdown" :options="expenditureBreakdownOptions"></b-form-select>
-          </b-form-group>
+          <BarChart :barChartData="expenditureSummary"
+          labelField="source"
+          valueLabel="Funding (USD)"
+          valueField="disbursement"
+          valuePrecision="2"
+          :chartType="expenditureChartType" />
         </b-col>
         <b-col md="4" class="ml-md-auto text-md-right">
+          <b-form-group
+            label="Breakdown by"
+            label-cols-lg="4"
+            class="mb-2">
+            <b-form-select v-model="expenditureBreakdown" :options="expenditureBreakdownOptions"></b-form-select>
+          </b-form-group>
           <b-form-radio-group v-model="expenditureChartType" :options="chartOptions" buttons button-variant="outline-primary" class="mb-2"></b-form-radio-group>
         </b-col>
       </b-row>
-      <BarChart :barChartData="expenditureSummary"
-      labelField="source"
-      valueLabel="Funding (USD)"
-      valueField="disbursement"
-      valuePrecision="2"
-      :chartType="expenditureChartType" />
       <hr />
       <h3>Expenditure data</h3>
         <b-table
@@ -62,10 +64,10 @@ export default {
     },
     expenditureTableFields() {
       return [
-      { key: 'Type1', sortable: true },
-      { key: 'Type2', sortable: true },
-      { key: 'Dates', sortable: true, formatter: 'dateFormatter' },
-      { key: 'Disbursement', sortable: true },
+      { key: 'Type1', label: 'Category', sortable: true },
+      { key: 'Type2', label: 'Subcategory', sortable: true },
+      { key: 'Dates', label: 'Dates', sortable: true, formatter: 'dateFormatter' },
+      { key: 'Disbursement', label: 'Amount (USD)', sortable: true },
       { key: 'Beneficiary Business', sortable: true },
       { key: 'Beneficiary Entity', sortable: true }
       ]
