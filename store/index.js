@@ -59,6 +59,12 @@ export const actions = {
             'In Kind': (item, head, resultRow, row, colIDx) => {
               return makeNumber(item)
             },
+            'On Budget': (item, head, resultRow, row, colIDx) => {
+              return makeNumber(item)
+            },
+            'Off Budget': (item, head, resultRow, row, colIDx) => {
+              return makeNumber(item)
+            },
             'Dates': (item, head, resultRow, row, colIDx) => {
               return makeDate(item)
             }
