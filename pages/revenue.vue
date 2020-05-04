@@ -4,22 +4,26 @@
       <h2>Revenue</h2>
       <b-row class="mb-2">
         <b-col md="8">
-          <b-form-group
-            label="Show breakdown by">
-            <b-form-select v-model="revenueBreakdown" :options="revenueBreakdownOptions"></b-form-select>
-          </b-form-group>
+          <BarChart :barChartData="revenueSummary"
+          labelField="source"
+          valueLabel="Funding (USD)"
+          :valueField="revenueValueField"
+          valuePrecision="2"
+          :chartType="revenueChartType" />
         </b-col>
         <b-col md="4" class="ml-md-auto text-md-right">
+          <b-form-group
+            label="Breakdown by"
+            label-cols-lg="4"
+            class="mb-2">
+            <b-form-select v-model="revenueBreakdown" :options="revenueBreakdownOptions"></b-form-select>
+          </b-form-group>
           <b-form-radio-group v-model="revenueChartType" :options="chartOptions" buttons button-variant="outline-primary" class="mb-2"></b-form-radio-group>
-          <b-form-radio-group v-model="revenueValueField" :options="revenueValueFields" buttons button-variant="outline-secondary" class="mb-2"></b-form-radio-group>
+          <b-form-radio-group v-model="revenueValueField" :options="revenueValueFields" buttons button-variant="outline-secondary" class="mb-2" size="sm"></b-form-radio-group>
+          <b-form-radio-group v-model="revenueCashFilter" :options="revenueCashFilterFields" buttons button-variant="outline-secondary" class="mb-2" size="sm"></b-form-radio-group>
+          <b-form-radio-group v-model="revenueOnBudgetFilter" :options="revenueOnBudgetFilterFields" buttons button-variant="outline-secondary" class="mb-2" size="sm"></b-form-radio-group>
         </b-col>
       </b-row>
-      <BarChart :barChartData="revenueSummary"
-      labelField="source"
-      valueLabel="Funding (USD)"
-      :valueField="revenueValueField"
-      valuePrecision="2"
-      :chartType="revenueChartType" />
       <hr />
       <h3>Revenue data</h3>
       <b-table
@@ -59,21 +63,58 @@ export default {
       revenueValueFields: [
         {'value': 'commitment', 'text': 'Commitments'},
         {'value': 'disbursement', 'text': 'Disbursements'}
-      ]
+      ],
+      revenueCashFilter: 'all',
+      revenueCashFilterFields: [
+        {'value': 'all', 'text': 'All contributions'},
+        {'value': 'cash', 'text': 'Cash'},
+        {'value': 'in-kind', 'text': 'In Kind'}
+      ],
+      revenueOnBudgetFilter: 'all',
+      revenueOnBudgetFilterFields: [
+        {'value': 'all', 'text': 'On/off budget'},
+        {'value': 'cash', 'text': 'On budget'},
+        {'value': 'in-kind', 'text': 'Off budget'}
+      ],
     }
   },
   computed: {
     revenueData() {
-      return this.$store.state.revenueData
+      if ((this.revenueCashFilter == 'all') && (this.revenueOnBudgetFilter == 'all')) {
+        return this.$store.state.revenueData
+      }
+      const checkCash = (item) => {
+        if (this.revenueCashFilter == 'all') { return true }
+        if (this.revenueCashFilter == 'cash') {
+          if (item.Cash > 0) { return true }
+        }
+        if (this.revenueCashFilter == 'in-kind') {
+          if (item['In Kind'] > 0) { return true }
+        }
+        return false
+      }
+      const checkOnBudget = (item) => {
+        if (this.revenueOnBudgetFilter == 'all') { return true }
+        if (this.revenueOnBudgetFilter == 'cash') {
+          if (item['On Budget'] > 0) { return true }
+        }
+        if (this.revenueOnBudgetFilter == 'in-kind') {
+          if (item['Off Budget'] > 0) { return true }
+        }
+        return false
+      }
+      return this.$store.state.revenueData.filter(item => {
+          return checkCash(item) && checkOnBudget(item)
+      })
     },
     revenueTableFields() {
       return [
-      { key: 'Donors', sortable: true },
-      { key: 'Type1', sortable: true },
-      { key: 'Type2', sortable: true },
-      { key: 'Dates', sortable: true, formatter: 'dateFormatter' },
-      { key: 'Commitment', sortable: true },
-      { key: 'Disbursement', sortable: true },
+      { key: 'Donors', label: 'Donor', sortable: true },
+      { key: 'Type1', label: 'Category', sortable: true },
+      { key: 'Type2', label: 'Subcategory', sortable: true },
+      { key: 'Dates', label: 'Date', sortable: true, formatter: 'dateFormatter' },
+      { key: 'Commitment', label: 'Commitments (USD)', sortable: true },
+      { key: 'Disbursement', label: 'Disbursements (USD)', sortable: true },
       { key: 'Cash', sortable: true },
       { key: 'In Kind', sortable: true }
       ]
