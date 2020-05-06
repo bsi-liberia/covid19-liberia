@@ -29,6 +29,7 @@
       <b-table
       :items="revenueData"
       :fields="revenueTableFields"
+      striped
       responsive></b-table>
     </b-container>
   </div>
