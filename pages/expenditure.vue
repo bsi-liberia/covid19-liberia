@@ -26,6 +26,7 @@
         <b-table
         :items="expenditureData"
         :fields="expenditureTableFields"
+        striped
         responsive></b-table>
     </b-container>
   </div>
