@@ -35,11 +35,8 @@ export const actions = {
       return _value
     }
     function makeDate(value) {
-      var _date = value.split("/")
-      var day = _date[0]
-      var month = _date[1]-1
-      var year = _date[2]
-      return new Date(year, month, day)
+      /* Dates are now formatted in ISO format (yyyy-mm-dd) */
+      return new Date(value)
     }
 
     return await this.$axios.$get(`${state.dataURL}`, {
