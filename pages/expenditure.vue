@@ -2,32 +2,63 @@
   <div>
     <b-container>
       <h2>Expenditure</h2>
+      <h3>Summary</h3>
       <b-row class="mb-2">
-        <b-col md="8">
+        <b-col>
           <BarChart :barChartData="expenditureSummary"
           labelField="source"
           valueLabel="Funding (USD)"
           valueField="disbursement"
           valuePrecision="2"
-          :chartType="expenditureChartType" />
-        </b-col>
-        <b-col md="4" class="ml-md-auto text-md-right">
-          <b-form-group
-            label="Breakdown by"
-            label-cols-lg="4"
-            class="mb-2">
-            <b-form-select v-model="expenditureBreakdown" :options="expenditureBreakdownOptions"></b-form-select>
-          </b-form-group>
-          <b-form-radio-group v-model="expenditureChartType" :options="chartOptions" buttons button-variant="outline-primary" class="mb-2"></b-form-radio-group>
+          :chartType="expenditureChartType"
+          pctField="disbursement_pct"
+          :commitments="false" />
         </b-col>
       </b-row>
+        <b-button v-b-toggle.sidebar-filters size="sm" variant="secondary" class="mt-4" block>
+          <font-awesome-icon :icon="['fas', 'cog']" />
+          <b>Chart options</b>
+        </b-button>
       <hr />
-      <h3>Expenditure data</h3>
+      <h3>Data</h3>
         <b-table
         :items="expenditureData"
         :fields="expenditureTableFields"
         striped
         responsive></b-table>
+      <b-sidebar id="sidebar-filters" title="Chart options" shadow="lg">
+        <div class="px-3 py-2">
+          <h5>Display as</h5>
+          <b-form-radio-group v-model="expenditureChartType" :options="chartOptions" buttons button-variant="outline-primary" class="mb-2"></b-form-radio-group>
+          <h5>Breakdown by</h5>
+          <b-form-group
+            class="mb-2">
+            <b-form-select v-model="expenditureBreakdown" :options="expenditureBreakdownOptions"></b-form-select>
+          </b-form-group>
+          <h5>Filters</h5>
+          <b-form-group
+          label="Category">
+            <b-form-checkbox-group
+            v-model="categoryFilter" :options="categoryFilterOptions" stacked></b-form-checkbox-group>
+          </b-form-group>
+          <b-form-group
+          label="Subcategory">
+            <b-form-checkbox-group
+            v-model="subCategoryFilter" :options="subCategoryFilterOptions" stacked></b-form-checkbox-group>
+          </b-form-group>
+          <b-form-group
+          label="Dates">
+            <b-form-checkbox-group
+            v-model="dateFilter" :options="dateFilterOptions" stacked></b-form-checkbox-group>
+          </b-form-group>
+          <hr />
+          <h5>Maximum values</h5>
+          <b-form-group
+            :description="`Show the top ${maximumValues} values`">
+            <b-form-select v-model="maximumValues" :options="[5, 10, 20, 100]"></b-form-select>
+          </b-form-group>
+        </div>
+      </b-sidebar>
     </b-container>
   </div>
 </template>
@@ -56,32 +87,109 @@ export default {
         {'value': 'Type1', 'text': 'Category'},
         {'value': 'Type2', 'text': 'Subcategory'}
       ],
-      expenditureChartType: 'pie'
+      expenditureChartType: 'pie',
+      dateFilter: [],
+      categoryFilter: [],
+      subCategoryFilter: [],
+      maximumValues: 10
     }
   },
   computed: {
+    dateFilterOptions() {
+      const monthNames = ["January", "February", "March",
+      "April", "May", "June", "July", "August", "September",
+      "October", "November", "December"];
+      var _dateValues = Object.values(this.$store.state.expenditureData.reduce((out, item) => {
+        var _date = new Date(item.Dates)
+        if (!(`${_date.getFullYear()}-${_date.getMonth()}` in out)) {
+          out[`${_date.getFullYear()}-${_date.getMonth()}`] = {
+            'value': `${_date.getFullYear()}-${_date.getMonth()}`,
+            'text': `${monthNames[_date.getMonth()]} ${_date.getFullYear()}`
+          }
+        }
+        return out
+      }, {}))
+      this.dateFilter = _dateValues.map(_date => {
+        return _date.value
+      })
+      return _dateValues
+    },
+    categoryFilterOptions() {
+      var _filters = Object.values(this.$store.state.expenditureData.reduce((out, item) => {
+        if (!(item.Type1 in out)) {
+          out[item.Type1] = {
+            'value': item.Type1,
+            'text': item.Type1
+          }
+        }
+        return out
+      }, {}))
+      this.categoryFilter = _filters.map(item => {
+        return item.value
+      })
+      return _filters
+    },
+    subCategoryFilterOptions() {
+      var _filters = Object.values(this.$store.state.expenditureData.reduce((out, item) => {
+        if (!(item.Type2 in out)) {
+          out[item.Type2] = {
+            'value': item.Type2,
+            'text': item.Type2,
+            'category': item.Type1
+          }
+        }
+        return out
+      }, {}))
+      this.subCategoryFilter = _filters.map(item => {
+        return item.value
+      })
+      return _filters
+    },
     expenditureData() {
-      return this.$store.state.expenditureData
+      const checkDate = (item) => {
+        if (this.dateFilter.length == 0) { return true }
+        const _date = new Date(item.Dates)
+        if (this.dateFilter.includes(`${_date.getFullYear()}-${_date.getMonth()}`)) {
+          return true
+        }
+        return false
+      }
+      const checkSubCategory = (item) => {
+        if (this.subCategoryFilter.length == 0) { return true }
+        if (this.subCategoryFilter.includes(item.Type2)) {
+          return true
+        }
+        return false
+      }
+      return this.$store.state.expenditureData.filter(item => {
+          return checkDate(item) && checkSubCategory(item)
+      })
     },
     expenditureTableFields() {
       return [
       { key: 'Type1', label: 'Category', sortable: true },
       { key: 'Type2', label: 'Subcategory', sortable: true },
       { key: 'Dates', label: 'Dates', sortable: true, formatter: 'dateFormatter' },
-      { key: 'Disbursement', label: 'Amount (USD)', sortable: true },
+      { key: 'Disbursement', label: 'Amount (USD)', sortable: true, formatter: 'numberFormatter', class: 'number-value' },
       { key: 'Beneficiary Business', sortable: true },
       { key: 'Beneficiary Entity', sortable: true }
       ]
     },
     expenditureSummary() {
+      const sumDisbursements = this.expenditureData.reduce((total, item) => {
+        total += item.Disbursement
+        return total
+      }, 0.0)
       return Object.values(this.expenditureData.reduce((summary, item)=> {
         if (item.Commitment != "#ERROR!") {
           if (summary[item[this.expenditureBreakdown]]) {
             summary[item[this.expenditureBreakdown]].disbursement += item.Disbursement
+            summary[item[this.expenditureBreakdown]].disbursement_pct += (item.Disbursement/sumDisbursements)*100.0
           } else {
             summary[item[this.expenditureBreakdown]] = {
             'source': item[this.expenditureBreakdown],
-            'disbursement': item.Disbursement
+            'disbursement': item.Disbursement,
+            'disbursement_pct': (item.Disbursement/sumDisbursements)*100.0
             }
           }
         }
@@ -111,6 +219,29 @@ export default {
       await this.$store.dispatch('getData')
       this.$nuxt.$loading.finish()
     }
-  }
+  },
+  watch: {
+    categoryFilter: {
+      handler: function(newCategoryFilter) {
+        this.subCategoryFilterOptions.forEach(subCategory => {
+          // Add
+          if ((newCategoryFilter.includes(subCategory.category))) {
+            if (!(this.subCategoryFilter.includes(subCategory.value))) {
+              this.subCategoryFilter.push(subCategory.value)
+            }
+          }
+          // Remove
+          else {
+            if (this.subCategoryFilter.includes(subCategory.value)) {
+              const index = this.subCategoryFilter.indexOf(subCategory.value)
+              if (index > -1) {
+                this.subCategoryFilter.splice(index, 1);
+              }
+            }
+          }
+        })
+      }
+    }
+  },
 }
 </script>
