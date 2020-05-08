@@ -12,19 +12,31 @@
       v-if="chartType=='pie'"></PieChart>
     <b-table
       :items="barChartData"
-      v-if="chartType=='table'"></b-table>
-    <p class="text-muted mb-3 mt-3" v-if="barChartData.length > 20">
-      Showing the top 20 entries. Click <b>Table</b> above to view all entries.
+      :fields="tableFields"
+      v-if="chartType=='table'"
+      striped>
+      <template v-slot:thead-top="data">
+        <b-tr>
+          <b-th></b-th>
+          <b-th colspan="2" v-if="commitments" class="number-value">Commitments</b-th>
+          <b-th colspan="2" class="number-value">Disbursements</b-th>
+        </b-tr>
+      </template>
+    </b-table>
+      </b-table>
+    <p class="text-muted mb-3 mt-3" v-if="(barChartData.length > maximumValues) && (chartType != 'table')">
+      Showing the top {{ maximumValues }} entries. Change to <b>Table</b> in
+      chart options to view all {{ barChartData.length}} entries.
     </p>
   </div>
 </template>
 <style scoped>
 .bar-chart {
-  height: 300px;
+  height: 400px;
   padding: 15px;
 }
 .pie-chart {
-  height: 300px;
+  height: 400px;
 }
 </style>
 <script>
@@ -36,12 +48,84 @@ export default {
     BarChart,
     PieChart
   },
-  props: ['barChartData', 'labelField', 'valueField', 'valueLabel', 'valuePrecision', 'step', 'chartType'],
+  props: ['barChartData', 'labelField', 'valueField',
+    'pctField', 'valueLabel', 'valuePrecision', 'step',
+    'chartType', 'commitments', 'maximumValues'],
   data() {
     return {
+      colours: [
+        "#1f77b4",
+        "#ff7f0e",
+        "#2ca02c",
+        "#d62728",
+        "#9467bd",
+        "#8c564b",
+        "#e377c2",
+        "#7f7f7f",
+        "#bcbd22",
+        "#17becf"
+      ]
     }
   },
   computed: {
+    tableFields() {
+      if (!this.commitments) {
+        return [
+          {
+            key: 'source',
+            sortable: true
+          },
+          {
+            key: 'disbursement',
+            label: 'USD',
+            sortable: true,
+            formatter: 'numberFormatter',
+            class: 'number-value'
+          },
+          {
+            key: 'disbursement_pct',
+            label: '%',
+            sortable: true,
+            formatter: 'numberFormatter',
+            class: 'number-value'
+          },
+        ]
+      }
+      return [
+        {
+          key: 'source',
+          sortable: true
+        },
+        {
+          key: 'commitment',
+          label: 'USD',
+          sortable: true,
+          formatter: 'numberFormatter',
+          class: 'number-value'
+        },
+        {
+          key: 'commitment_pct',
+          label: '%',
+          sortable: true,
+          formatter: 'numberFormatter',
+          class: 'number-value'
+        },
+        {
+          key: 'disbursement',
+          label: 'USD',
+          sortable: true,
+          formatter: 'numberFormatter',
+          class: 'number-value'
+        },
+        {
+          key: 'disbursement_pct',
+          label: '%',
+          sortable: true,
+          formatter: 'numberFormatter',
+          class: 'number-value'
+        },
+      ]
+    },
     chartOptions() {
       const tooltips = {
         callbacks: {
@@ -66,6 +150,12 @@ export default {
               label += value
             }
             return label;
+          }),
+          footer: ((tooltipItem, data) => {
+            const pct = this.barChartData[tooltipItem[0].index][this.pctField].toLocaleString(undefined, {
+                maximumFractionDigits: 1
+              })
+            return `${pct}% of total`
           })
         }
       }
@@ -109,31 +199,76 @@ export default {
         maintainAspectRatio: false,
         legend: this.chartType == 'pie' ? legend : null,
         tooltips: tooltips,
-        scales: this.chartType == 'bar' ? scales : null
+        scales: this.chartType == 'bar' ? scales : null,
+        plugins: {
+            datalabels: {
+                backgroundColor: function(context) {
+                  return context.dataset.backgroundColor;
+                },
+                display: (context) => {
+                  return this.barChartData[context.dataIndex][this.pctField] > 5
+                },
+                borderColor: 'white',
+                borderRadius: 2,
+                borderWidth: 2,
+                color: 'white',
+                textShadowColor : '#000000',
+                textShadowBlur: 2,
+                font: {
+                  weight: 'bold'
+                },
+                anchor: 'end'
+            }
+        }
       }
     },
     chartData() {
-      const colours = [
-        "#1f77b4",
-        "#ff7f0e",
-        "#2ca02c",
-        "#d62728",
-        "#9467bd",
-        "#8c564b",
-        "#e377c2",
-        "#7f7f7f",
-        "#bcbd22",
-        "#17becf"
-      ]
       return {
         datasets: [{
           label: this.labelField,
           fill: true,
-          data: this.barChartData.map((ds) => { return ds[this.valueField] }).slice(0,20),
-          backgroundColor: colours
+          data: this.makeData(),
+          backgroundColor: this.colours,
+          datalabels: {
+            formatter: (value, context) => {
+              const pct = this.barChartData[context.dataIndex][this.pctField].toLocaleString(undefined, {
+                maximumFractionDigits: 1
+              })
+              return `${pct}%`
+            }
+          }
         }],
-        labels: this.barChartData.map((ds) => { return ds[this.labelField] }).slice(0,20),
+        labels: this.makeLabels(),
       }
+    }
+  },
+  methods: {
+    makeData() {
+      var _data = this.barChartData.map((ds) => {
+        return ds[this.valueField]
+      }).slice(0, this.maximumValues)
+      if (this.barChartData.length > this.maximumValues) {
+        _data.push(
+          this.barChartData.slice(this.maximumValues).reduce((total, item) => {
+            total += item[this.valueField]
+            return total
+          }, 0.0)
+        )
+      }
+      return _data
+    },
+    makeLabels() {
+      var _labels = this.barChartData.map((ds) => { return ds[this.labelField] }).slice(0, this.maximumValues)
+      if (this.barChartData.length > this.maximumValues) {
+        _labels.push("Other")
+      }
+      return _labels
+    },
+    numberFormatter(value) {
+      return value ? value.toLocaleString(undefined, {
+        maximumFractionDigits: 2,
+        minimumFractionDigits: 2
+      }) : ""
     }
   }
 }
