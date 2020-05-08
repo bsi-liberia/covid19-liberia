@@ -74,15 +74,15 @@ footer {
   margin: 0px auto;
   min-height: 100vh;
   min-width:100%;
-  /*
-  background-color: #365e93;
-  color: #ffffff;
-  */
   padding-top:40px;
   padding-bottom: 40px;
 }
 .number-value {
   text-align: right;
+}
+
+.last-updated {
+  font-style: italic;
 }
 </style>
 <script>

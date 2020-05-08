@@ -40,10 +40,6 @@
   max-width: 800px;
 }
 
-.last-updated {
-  font-style: italic;
-}
-
 </style>
 <script>
 import config from '../nuxt.config'
