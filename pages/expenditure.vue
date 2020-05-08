@@ -94,7 +94,7 @@ export default {
         {'value': 'Type1', 'text': 'Category'},
         {'value': 'Type2', 'text': 'Subcategory'}
       ],
-      expenditureChartType: 'pie',
+      expenditureChartType: 'bar',
       dateFilter: [],
       categoryFilter: [],
       subCategoryFilter: [],
