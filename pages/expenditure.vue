@@ -15,7 +15,7 @@
           :commitments="false" />
         </b-col>
       </b-row>
-        <b-button v-b-toggle.sidebar-filters size="sm" variant="secondary" class="mt-4" block>
+        <b-button v-b-toggle.sidebar-filters size="sm" variant="secondary" class="mt-2" block>
           <font-awesome-icon :icon="['fas', 'cog']" />
           <b>Chart options</b>
         </b-button>

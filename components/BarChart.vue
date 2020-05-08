@@ -33,7 +33,6 @@
 <style scoped>
 .bar-chart {
   height: 400px;
-  padding: 15px;
 }
 .pie-chart {
   height: 400px;
@@ -200,6 +199,9 @@ export default {
         legend: this.chartType == 'pie' ? legend : null,
         tooltips: tooltips,
         scales: this.chartType == 'bar' ? scales : null,
+        layout: {
+          padding: 20
+        },
         plugins: {
             datalabels: {
                 backgroundColor: function(context) {
