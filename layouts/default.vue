@@ -23,12 +23,6 @@
       </b-collapse>
     </b-navbar>
     <b-container fluid class="covid-container">
-      <b-container>
-        <b-alert show variant="danger">Note: this site is still under active development.
-          The data and functionality are liable to frequently change and should not be
-          relied on, or taken in any way as authoritative, in this period.
-        </b-alert>
-      </b-container>
       <nuxt />
     </b-container>
     <footer>
