@@ -1,7 +1,14 @@
 <template>
   <div>
     <b-container>
-      <h2>Revenue</h2>
+      <b-row>
+        <b-col md="8">
+          <h2>Revenue</h2>
+        </b-col>
+        <b-col md="4" class="text-md-right">
+          <b-badge class="last-updated" variant="light">as of {{ lastUpdated }}</b-badge>
+        </b-col>
+      </b-row>
       <h3>Summary</h3>
       <b-row class="mb-2">
         <b-col>
@@ -133,6 +140,9 @@ export default {
     }
   },
   computed: {
+    lastUpdated() {
+      return this.$store.state.lastUpdatedRevenue
+    },
     dateFilterOptions() {
       const monthNames = ["January", "February", "March",
       "April", "May", "June", "July", "August", "September",
