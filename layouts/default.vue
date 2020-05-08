@@ -78,6 +78,9 @@ footer {
   padding-top:40px;
   padding-bottom: 40px;
 }
+.number-value {
+  text-align: right;
+}
 </style>
 <script>
 import config from '../nuxt.config'
