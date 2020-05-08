@@ -10,14 +10,14 @@
         <b-progress-bar :value="disbursed" variant="success" :label="`USD ${numberFormatter(disbursed)} Disbursed`"></b-progress-bar>
         <b-progress-bar :value="committed-disbursed" variant="secondary" striped :label="`USD ${numberFormatter(committed)} Not yet disbursed`"></b-progress-bar>
       </b-progress>
-      <small>Out of USD {{ numberFormatter(committed) }} committed</small>
+      <small>Out of USD {{ numberFormatter(committed) }} committed (cash only)</small>
       <hr />
       <h3>Usage of funds</h3>
       <b-progress :max="disbursed" variant="success" height="30px" show-label>
         <b-progress-bar :value="spent" variant="primary" :label="`USD ${numberFormatter(spent)} Spent`"></b-progress-bar>
         <b-progress-bar :value="disbursed-spent" variant="secondary" striped :label="`USD ${numberFormatter(disbursed-spent)} Unspent`"></b-progress-bar>
       </b-progress>
-      <small>Out of USD {{ numberFormatter(disbursed) }} disbursed</small>
+      <small>Out of USD {{ numberFormatter(disbursed) }} disbursed (cash only)</small>
     </b-container>
   </div>
 </template>
@@ -114,13 +114,17 @@ export default {
     },
     committed() {
       return this.revenueData.reduce((total, item) => {
-        total += item.Commitment
+        if (item.Cash > 0) {
+          total += item.Commitment
+        }
         return total
       }, 0.00)
     },
     disbursed() {
       return this.revenueData.reduce((total, item) => {
-        total += item.Disbursement
+        if (item.Cash > 0) {
+          total += item.Disbursement
+        }
         return total
       }, 0.00)
     },
