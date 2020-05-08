@@ -62,6 +62,12 @@ export const actions = {
             'Off Budget': (item, head, resultRow, row, colIDx) => {
               return makeNumber(item)
             },
+            'Grant Component': (item, head, resultRow, row, colIDx) => {
+              return makeNumber(item)
+            },
+            'Loan Component': (item, head, resultRow, row, colIDx) => {
+              return makeNumber(item)
+            },
             'Dates': (item, head, resultRow, row, colIDx) => {
               return makeDate(item)
             }
