@@ -68,17 +68,13 @@ export default {
     },
     committed() {
       return this.revenueData.reduce((total, item) => {
-        if (item.Cash > 0) {
-          total += item.Commitment
-        }
+        total += item.Commitment
         return total
       }, 0.00)
     },
     disbursed() {
       return this.revenueData.reduce((total, item) => {
-        if (item.Cash > 0) {
-          total += item.Disbursement
-        }
+        total += item.Disbursement
         return total
       }, 0.00)
     },
