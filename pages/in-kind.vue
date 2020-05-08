@@ -1,7 +1,14 @@
 <template>
   <div>
     <b-container>
-      <h2>In Kind Contributions</h2>
+      <b-row>
+        <b-col md="8">
+          <h2>In Kind Contributions</h2>
+        </b-col>
+        <b-col md="4" class="text-md-right">
+          <b-badge class="last-updated" variant="light">as of {{ lastUpdated }}</b-badge>
+        </b-col>
+      </b-row>
       <h3>Summary</h3>
       <b-row class="mb-2">
         <b-col>
@@ -37,12 +44,17 @@
           </b-form-group>
           <h5>Filters</h5>
           <b-form-group
-          label="Category">
+          label="Response Center">
+            <b-form-checkbox-group
+            v-model="responseCenterFilter" :options="responseCenterFilterOptions" stacked></b-form-checkbox-group>
+          </b-form-group>
+          <b-form-group
+          label="Donor Category">
             <b-form-checkbox-group
             v-model="categoryFilter" :options="categoryFilterOptions" stacked></b-form-checkbox-group>
           </b-form-group>
           <b-form-group
-          label="Subcategory">
+          label="Donor Subcategory">
             <b-form-checkbox-group
             v-model="subCategoryFilter" :options="subCategoryFilterOptions" stacked></b-form-checkbox-group>
           </b-form-group>
@@ -92,10 +104,14 @@ export default {
       dateFilter: [],
       categoryFilter: [],
       subCategoryFilter: [],
+      responseCenterFilter: [],
       maximumValues: 10
     }
   },
   computed: {
+    lastUpdated() {
+      return this.$store.state.lastUpdatedInKind
+    },
     dateFilterOptions() {
       const monthNames = ["January", "February", "March",
       "April", "May", "June", "July", "August", "September",
@@ -114,6 +130,21 @@ export default {
         return _date.value
       })
       return _dateValues
+    },
+    responseCenterFilterOptions() {
+      var _filters = Object.values(this.$store.state.inKindData.reduce((out, item) => {
+        if (!(item['Response Center'] in out)) {
+          out[item['Response Center']] = {
+            'value': item['Response Center'],
+            'text': item['Response Center']
+          }
+        }
+        return out
+      }, {}))
+      this.responseCenterFilter = _filters.map(item => {
+        return item.value
+      })
+      return _filters
     },
     categoryFilterOptions() {
       var _filters = Object.values(this.$store.state.inKindData.reduce((out, item) => {
@@ -162,8 +193,15 @@ export default {
         }
         return false
       }
+      const checkResponseCenter = (item) => {
+        if (this.responseCenterFilter.length == 0) { return true }
+        if (this.responseCenterFilter.includes(item['Response Center'])) {
+          return true
+        }
+        return false
+      }
       return this.$store.state.inKindData.filter(item => {
-          return checkDate(item) && checkSubCategory(item)
+          return checkDate(item) && checkSubCategory(item) && checkResponseCenter(item)
       })
     },
     inKindTableFields() {
