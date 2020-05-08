@@ -7,6 +7,7 @@ import csvtojson from 'csvtojson'
 export const state = () => ({
   revenueData: [],
   expenditureData: [],
+  inKindData: [],
   lastUpdated: null,
   dataURL: "https://docs.google.com/spreadsheets/d/1gFh5PF4XKoxSSaIxP9E-iZi_xbuyahfAXmhr2j3I1x0/export?format=csv"
 })
@@ -18,6 +19,9 @@ export const mutations = {
   },
   setExpenditureData(state, expenditureData) {
     state.expenditureData = expenditureData
+  },
+  setInKindData(state, inKindData) {
+    state.inKindData = inKindData
   },
   setLastUpdated(state) {
     state.lastUpdated = new Date(Math.max.apply(
@@ -77,6 +81,9 @@ export const actions = {
           }))
           commit('setExpenditureData', csvJson.filter(item=> {
             return item["Primary Object"] == "Expenditure"
+          }))
+          commit('setInKindData', csvJson.filter(item=> {
+            return item["Primary Object"] == "In Kind"
           }))
           commit('setLastUpdated')
         }))
