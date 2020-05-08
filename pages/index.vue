@@ -47,41 +47,13 @@
 </style>
 <script>
 import config from '../nuxt.config'
-import BarChart from '~/components/BarChart.vue'
-import axios from 'axios'
-import csvtojson from 'csvtojson'
 
 export default {
   components: {
-    BarChart
   },
   data() {
     return {
-      title: config.head.title,
-      dataURL: "https://docs.google.com/spreadsheets/d/1gFh5PF4XKoxSSaIxP9E-iZi_xbuyahfAXmhr2j3I1x0/export?format=csv",
-      revenueBreakdown: 'Type1',
-      revenueBreakdownOptions: [
-        {'value': 'Type1', 'text': 'Category'},
-        {'value': 'Type2', 'text': 'Subcategory'},
-        {'value': 'Donors', 'text': 'Donor'}
-      ],
-      revenueChartType: 'pie',
-      chartOptions: [
-        {'value': 'pie', 'text': 'Pie chart'},
-        {'value': 'bar', 'text': 'Bar chart'},
-        {'value': 'table', 'text': 'Table'}
-      ],
-      revenueValueField: 'commitment',
-      revenueValueFields: [
-        {'value': 'commitment', 'text': 'Commitments'},
-        {'value': 'disbursement', 'text': 'Disbursements'}
-      ],
-      expenditureBreakdown: 'Type1',
-      expenditureBreakdownOptions: [
-        {'value': 'Type1', 'text': 'Category'},
-        {'value': 'Type2', 'text': 'Subcategory'}
-      ],
-      expenditureChartType: 'pie'
+      title: config.head.title
     }
   },
   computed: {
@@ -93,24 +65,6 @@ export default {
     },
     expenditureData() {
       return this.$store.state.expenditureData
-    },
-    revenueTableFields() {
-      return ['Donors', 'Type1', 'Type2', 'Dates',
-      'Commitment', 'Disbursement', 'Cash', 'In Kind'].map(field => {
-          return {
-            key: field,
-            sortable: true
-          }
-      })
-    },
-    expenditureTableFields() {
-      return ['Type1', 'Type2', 'Dates', 'Disbursement',
-      'Beneficiary Business', 'Beneficiary Entity'].map(field => {
-          return {
-            key: field,
-            sortable: true
-          }
-      })
     },
     committed() {
       return this.revenueData.reduce((total, item) => {
@@ -133,44 +87,6 @@ export default {
         total += item.Disbursement
         return total
       }, 0.00)
-    },
-    revenueSummary() {
-      return Object.values(this.revenueData.reduce((summary, item)=> {
-        if (item.Commitment != "#ERROR!") {
-          if (summary[item[this.revenueBreakdown]]) {
-            summary[item[this.revenueBreakdown]].commitment += item.Commitment
-            summary[item[this.revenueBreakdown]].disbursement += item.Disbursement
-          } else {
-            summary[item[this.revenueBreakdown]] = {
-            'source': item[this.revenueBreakdown],
-            'commitment': item.Commitment,
-            'disbursement': item.Disbursement
-            }
-          }
-        }
-        return summary
-      },
-      {})).sort((a,b) =>
-          a[this.revenueValueField] < b[this.revenueValueField] ? -1 : 1
-      ).reverse()
-    },
-    expenditureSummary() {
-      return Object.values(this.expenditureData.reduce((summary, item)=> {
-        if (item.Commitment != "#ERROR!") {
-          if (summary[item[this.expenditureBreakdown]]) {
-            summary[item[this.expenditureBreakdown]].disbursement += item.Disbursement
-          } else {
-            summary[item[this.expenditureBreakdown]] = {
-            'source': item[this.expenditureBreakdown],
-            'disbursement': item.Disbursement
-            }
-          }
-        }
-        return summary
-      },
-      {})).sort((a,b) =>
-          a.disbursement < b.disbursement ? -1 : 1
-      ).reverse()
     }
   },
   methods: {
@@ -191,24 +107,6 @@ export default {
     }
   },
   watch: {
-    useCache() {
-      this.$store.commit('setOriginalActivityData', [])
-      this.loadData()
-    },
-    IATISource() {
-      this.$store.commit('setOriginalActivityData', [])
-      this.loadData()
-    },
-    selectedCountry(value) {
-      if (value) {
-        this.summaryLabelField = 'organisation'
-      }
-    },
-    selectedReportingOrg(value) {
-      if (value) {
-        this.summaryLabelField = 'country'
-      }
-    }
   },
   mounted() {
     this.$nextTick(() => {
