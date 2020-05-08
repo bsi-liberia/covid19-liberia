@@ -9,6 +9,9 @@ export const state = () => ({
   expenditureData: [],
   inKindData: [],
   lastUpdated: null,
+  lastUpdatedRevenue: null,
+  lastUpdatedExpenditure: null,
+  lastUpdatedInKind: null,
   dataURL: "https://docs.google.com/spreadsheets/d/1gFh5PF4XKoxSSaIxP9E-iZi_xbuyahfAXmhr2j3I1x0/export?format=csv"
 })
 
@@ -24,9 +27,22 @@ export const mutations = {
     state.inKindData = inKindData
   },
   setLastUpdated(state) {
-    state.lastUpdated = new Date(Math.max.apply(
+    state.lastUpdatedRevenue = new Date(Math.max.apply(
+      null, state.revenueData.map(item => { return item.Dates })
+    )).toISOString().substr(0, 10)
+    state.lastUpdatedExpenditure = new Date(Math.max.apply(
       null, state.expenditureData.map(item => { return item.Dates })
     )).toISOString().substr(0, 10)
+    state.lastUpdatedInKind = new Date(Math.max.apply(
+      null, state.inKindData.map(item => { return item.Dates })
+    )).toISOString().substr(0, 10)
+    state.lastUpdated = new Date(Math.max.apply(null,
+      [state.lastUpdatedRevenue,
+      state.lastUpdatedExpenditure,
+      state.lastUpdatedInKind].map(d=> {
+        return new Date(d)
+      }))
+    ).toISOString().substr(0, 10)
   }
 }
 
