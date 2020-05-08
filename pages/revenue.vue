@@ -27,10 +27,6 @@
       :fields="revenueTableFields"
       striped
       responsive>
-        <template v-slot:cell(CashInKind)="data">
-          <b-badge v-if="data.item.Cash>0" variant="primary">Cash</b-badge>
-          <b-badge v-if="data.item['In Kind']>0">In Kind</b-badge>
-        </template>
         <template v-slot:cell(OnBudget)="data">
           <b-badge v-if="data.item['On Budget']>0" variant="primary">On Budget</b-badge>
           <b-badge v-if="data.item['Off Budget']>0">Off budget</b-badge>
@@ -58,10 +54,6 @@
           <hr />
           <h5>Filters</h5>
           <b-form-radio-group v-model="revenueValueField" :options="revenueValueFields" buttons button-variant="outline-secondary" class="mb-2" size="sm"></b-form-radio-group>
-          <b-form-group
-            label="Cash / In Kind contributions">
-            <b-form-checkbox-group v-model="revenueCashFilter" :options="revenueCashFilterFields" stacked button-variant="outline-secondary" class="mb-2" size="sm"></b-form-checkbox-group>
-          </b-form-group>
           <b-form-group
             label="On/off budget">
             <b-form-checkbox-group v-model="revenueOnBudgetFilter" :options="revenueOnBudgetFilterFields" stacked button-variant="outline-secondary" class="mb-2" size="sm"></b-form-checkbox-group>
@@ -127,11 +119,6 @@ export default {
       revenueValueFields: [
         {'value': 'commitment', 'text': 'Commitments'},
         {'value': 'disbursement', 'text': 'Disbursements'}
-      ],
-      revenueCashFilter: ['cash', 'in-kind'],
-      revenueCashFilterFields: [
-        {'value': 'cash', 'text': 'Cash'},
-        {'value': 'in-kind', 'text': 'In Kind'}
       ],
       revenueOnBudgetFilter: ['on-budget', 'off-budget'],
       revenueOnBudgetFilterFields: [
@@ -217,21 +204,10 @@ export default {
       return _filters
     },
     revenueData() {
-      if ((this.revenueCashFilter.length == 0) &&
-        (this.revenueOnBudgetFilter.length == 0) &&
+      if ((this.revenueOnBudgetFilter.length == 0) &&
         (this.dateFilter.length==0) &&
         (this.donorFilter.length == 0)) {
         return this.$store.state.revenueData
-      }
-      const checkCash = (item) => {
-        if (this.revenueCashFilter == null) { return true }
-        if (this.revenueCashFilter.includes('cash')) {
-          if (item.Cash > 0) { return true }
-        }
-        if (this.revenueCashFilter.includes('in-kind')) {
-          if (item['In Kind'] > 0) { return true }
-        }
-        return false
       }
       const checkOnBudget = (item) => {
         if (this.revenueOnBudgetFilter == null) { return true }
@@ -259,7 +235,7 @@ export default {
         return false
       }
       return this.$store.state.revenueData.filter(item => {
-          return checkCash(item) && checkOnBudget(item) && checkDate(item) && checkDonor(item)
+          return checkOnBudget(item) && checkDate(item) && checkDonor(item)
       })
     },
     revenueTableFields() {
@@ -270,7 +246,6 @@ export default {
       { key: 'Dates', label: 'Date', sortable: true, formatter: 'dateFormatter' },
       { key: 'Commitment', label: 'Commitments (USD)', sortable: true, formatter: 'numberFormatter', class: 'number-value' },
       { key: 'Disbursement', label: 'Disbursements (USD)', sortable: true, formatter: 'numberFormatter', class: 'number-value'  },
-      { key: 'CashInKind', label: 'Cash / In Kind', sortable: true },
       { key: 'OnBudget', label: 'On / Off Budget', sortable: true },
       { key: 'GrantLoan', label: 'Grant / Loan', sortable: true }
       ]
