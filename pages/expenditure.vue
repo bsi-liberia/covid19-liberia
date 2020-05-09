@@ -14,7 +14,7 @@
         <b-col>
           <BarChart :barChartData="expenditureSummary"
           labelField="source"
-          valueLabel="Funding (USD)"
+          valueLabel="Spending (USD)"
           valueField="disbursement"
           valuePrecision="2"
           :chartType="expenditureChartType"
