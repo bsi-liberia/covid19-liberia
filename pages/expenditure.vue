@@ -9,7 +9,7 @@
           <b-badge class="last-updated" variant="light">as of {{ lastUpdated }}</b-badge>
         </b-col>
       </b-row>
-      <h3>Summary</h3>
+      <h3>Summary by {{ expenditureBreakdownLabel }}</h3>
       <b-row class="mb-2">
         <b-col>
           <BarChart :barChartData="expenditureSummary"
@@ -91,8 +91,8 @@ export default {
       ],
       expenditureBreakdown: 'Type1',
       expenditureBreakdownOptions: [
-        {'value': 'Type1', 'text': 'Category'},
-        {'value': 'Type2', 'text': 'Subcategory'}
+        {'value': 'Type1', 'text': 'Expenditure Category'},
+        {'value': 'Type2', 'text': 'Expenditure Subcategory'}
       ],
       expenditureChartType: 'bar',
       dateFilter: [],
@@ -102,6 +102,11 @@ export default {
     }
   },
   computed: {
+    expenditureBreakdownLabel() {
+      return this.expenditureBreakdownOptions.filter(rb => {
+        return rb.value == this.expenditureBreakdown
+      })[0].text
+    },
     lastUpdated() {
       return this.$store.state.lastUpdatedExpenditure
     },
