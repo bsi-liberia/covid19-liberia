@@ -98,7 +98,8 @@ export default {
       inKindBreakdownOptions: [,
         {'value': 'Response Center', 'text': 'Response Center'},
         {'value': 'Type1', 'text': 'Donor Category'},
-        {'value': 'Type2', 'text': 'Donor Subcategory'}
+        {'value': 'Type2', 'text': 'Donor Subcategory'},
+        {'value': 'Donors', 'text': 'Donor'}
       ],
       inKindChartType: 'pie',
       dateFilter: [],
