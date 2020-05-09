@@ -54,6 +54,16 @@
             v-model="subCategoryFilter" :options="subCategoryFilterOptions" stacked></b-form-checkbox-group>
           </b-form-group>
           <b-form-group
+          label="Beneficiary Business">
+            <b-form-checkbox-group
+            v-model="beneficiaryBusinessFilter" :options="beneficiaryBusinessFilterOptions" stacked></b-form-checkbox-group>
+          </b-form-group>
+          <b-form-group
+          label="Beneficiary Entity">
+            <b-form-checkbox-group
+            v-model="beneficiaryEntityFilter" :options="beneficiaryEntityFilterOptions" stacked></b-form-checkbox-group>
+          </b-form-group>
+          <b-form-group
           label="Dates">
             <b-form-checkbox-group
             v-model="dateFilter" :options="dateFilterOptions" stacked></b-form-checkbox-group>
@@ -92,12 +102,16 @@ export default {
       expenditureBreakdown: 'Type1',
       expenditureBreakdownOptions: [
         {'value': 'Type1', 'text': 'Expenditure Category'},
-        {'value': 'Type2', 'text': 'Expenditure Subcategory'}
+        {'value': 'Type2', 'text': 'Expenditure Subcategory'},
+        {'value': 'Beneficiary Business', 'text': 'Beneficiary Business'},
+        {'value': 'Beneficiary Entity', 'text': 'Beneficiary Entity'}
       ],
       expenditureChartType: 'bar',
       dateFilter: [],
       categoryFilter: [],
       subCategoryFilter: [],
+      beneficiaryBusinessFilter: [],
+      beneficiaryEntityFilter: [],
       maximumValues: 10
     }
   },
@@ -160,6 +174,36 @@ export default {
       })
       return _filters
     },
+    beneficiaryBusinessFilterOptions() {
+      var _filters = Object.values(this.$store.state.expenditureData.reduce((out, item) => {
+        if (!(item['Beneficiary Business'] in out)) {
+          out[item['Beneficiary Business']] = {
+            'value': item['Beneficiary Business'],
+            'text': item['Beneficiary Business']
+          }
+        }
+        return out
+      }, {}))
+      this.beneficiaryBusinessFilter = _filters.map(item => {
+        return item.value
+      })
+      return _filters
+    },
+    beneficiaryEntityFilterOptions() {
+      var _filters = Object.values(this.$store.state.expenditureData.reduce((out, item) => {
+        if (!(item['Beneficiary Entity'] in out)) {
+          out[item['Beneficiary Entity']] = {
+            'value': item['Beneficiary Entity'],
+            'text': item['Beneficiary Entity']
+          }
+        }
+        return out
+      }, {}))
+      this.beneficiaryEntityFilter = _filters.map(item => {
+        return item.value
+      })
+      return _filters
+    },
     expenditureData() {
       const checkDate = (item) => {
         if (this.dateFilter.length == 0) { return true }
@@ -176,8 +220,23 @@ export default {
         }
         return false
       }
+      const checkBeneficiaryBusiness = (item) => {
+        if (this.beneficiaryBusinessFilter.length == 0) { return true }
+        if (this.beneficiaryBusinessFilter.includes(item['Beneficiary Business'])) {
+          return true
+        }
+        return false
+      }
+      const checkBeneficiaryEntity = (item) => {
+        if (this.beneficiaryEntityFilter.length == 0) { return true }
+        if (this.beneficiaryEntityFilter.includes(item['Beneficiary Entity'])) {
+          return true
+        }
+        return false
+      }
       return this.$store.state.expenditureData.filter(item => {
-          return checkDate(item) && checkSubCategory(item)
+          return checkDate(item) && checkSubCategory(item) &&
+            checkBeneficiaryBusiness(item) && checkBeneficiaryEntity(item)
       })
     },
     expenditureTableFields() {
