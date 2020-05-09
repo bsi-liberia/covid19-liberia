@@ -9,7 +9,7 @@
           <b-badge class="last-updated" variant="light">as of {{ lastUpdated }}</b-badge>
         </b-col>
       </b-row>
-      <h3>Summary</h3>
+      <h3>Summary by {{ inKindBreakdownLabel }}</h3>
       <b-row class="mb-2">
         <b-col>
           <BarChart :barChartData="inKindSummary"
@@ -109,6 +109,11 @@ export default {
     }
   },
   computed: {
+    inKindBreakdownLabel() {
+      return this.inKindBreakdownOptions.filter(rb => {
+        return rb.value == this.inKindBreakdown
+      })[0].text
+    },
     lastUpdated() {
       return this.$store.state.lastUpdatedInKind
     },
