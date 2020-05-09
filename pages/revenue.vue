@@ -9,7 +9,7 @@
           <b-badge class="last-updated" variant="light">as of {{ lastUpdated }}</b-badge>
         </b-col>
       </b-row>
-      <h3>Summary</h3>
+      <h3>Summary by {{ revenueBreakdownLabel }}</h3>
       <b-row class="mb-2">
         <b-col>
           <BarChart :barChartData="revenueSummary"
@@ -112,8 +112,8 @@ export default {
       title: config.head.title,
       revenueBreakdown: 'Type1',
       revenueBreakdownOptions: [
-        {'value': 'Type1', 'text': 'Category'},
-        {'value': 'Type2', 'text': 'Subcategory'},
+        {'value': 'Type1', 'text': 'Donor Category'},
+        {'value': 'Type2', 'text': 'Donor Subcategory'},
         {'value': 'Donors', 'text': 'Donor'}
       ],
       revenueChartType: 'pie',
@@ -140,6 +140,11 @@ export default {
     }
   },
   computed: {
+    revenueBreakdownLabel() {
+      return this.revenueBreakdownOptions.filter(rb => {
+        return rb.value == this.revenueBreakdown
+      })[0].text
+    },
     lastUpdated() {
       return this.$store.state.lastUpdatedRevenue
     },
