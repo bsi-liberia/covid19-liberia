@@ -18,6 +18,27 @@
         <b-progress-bar :value="disbursed-spent" variant="secondary" striped :label="`USD ${numberFormatter(disbursed-spent)} Unspent`"></b-progress-bar>
       </b-progress>
       <small>Out of USD {{ numberFormatter(disbursed) }} disbursed (cash only)</small>
+      <hr />
+      <b-row>
+        <b-col md="4">
+          <h3>Revenue</h3>
+          <b-btn :to="{name: 'revenue'}" block variant="primary">
+            View {{ revenueData.length }} revenue entries &raquo;
+          </b-btn>
+        </b-col>
+        <b-col md="4">
+          <h3>Expenditure</h3>
+          <b-btn :to="{name: 'expenditure'}" block variant="primary">
+            View {{ expenditureData.length }} expenditure entries &raquo;
+          </b-btn>
+        </b-col>
+        <b-col md="4">
+          <h3>In-Kind</h3>
+          <b-btn :to="{name: 'in-kind'}" block variant="primary">
+            View {{ inKindData.length }} in-kind contributions &raquo;
+          </b-btn>
+        </b-col>
+      </b-row>
     </b-container>
   </div>
 </template>
@@ -61,6 +82,9 @@ export default {
     },
     expenditureData() {
       return this.$store.state.expenditureData
+    },
+    inKindData() {
+      return this.$store.state.inKindData
     },
     committed() {
       return this.revenueData.reduce((total, item) => {
