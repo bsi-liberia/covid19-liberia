@@ -135,7 +135,8 @@ export default {
       revenueValueField: 'commitment',
       revenueValueFields: [
         {'value': 'commitment', 'text': 'Commitments'},
-        {'value': 'disbursement', 'text': 'Disbursements'}
+        {'value': 'disbursement', 'text': 'Disbursements'},
+        {'value': 'outstanding', 'text': 'Outstanding'}
       ],
       revenueOnBudgetFilter: ['on-budget', 'off-budget'],
       revenueOnBudgetFilterFields: [
@@ -271,6 +272,7 @@ export default {
       { key: 'Dates', label: 'Date', sortable: true, formatter: 'dateFormatter' },
       { key: 'Commitment', label: 'Commitments (USD)', sortable: true, formatter: 'numberFormatter', class: 'number-value' },
       { key: 'Disbursement', label: 'Disbursements (USD)', sortable: true, formatter: 'numberFormatter', class: 'number-value'  },
+      { key: 'Outstanding', label: 'Outstanding (USD)', sortable: true, formatter: 'numberFormatter', class: 'number-value'  },
       { key: 'OnBudget', label: 'On / Off Budget', sortable: true },
       { key: 'GrantLoan', label: 'Grant / Loan', sortable: true }
       ]
@@ -302,20 +304,28 @@ export default {
         total += item.Disbursement
         return total
       }, 0.0)
+      const sumOutstanding = this.revenueData.reduce((total, item) => {
+        total += item.Outstanding
+        return total
+      }, 0.0)
       return Object.values(this.revenueData.reduce((summary, item)=> {
         if (item.Commitment != "#ERROR!") {
           if (summary[item[this.revenueBreakdown]]) {
             summary[item[this.revenueBreakdown]].commitment += item.Commitment
             summary[item[this.revenueBreakdown]].disbursement += item.Disbursement
+            summary[item[this.revenueBreakdown]].outstanding += item.Outstanding
             summary[item[this.revenueBreakdown]].commitment_pct += (item.Commitment/sumCommitments)*100.0,
             summary[item[this.revenueBreakdown]].disbursement_pct += (item.Disbursement/sumDisbursements)*100.0
+            summary[item[this.revenueBreakdown]].outstanding_pct += (item.Disbursement/sumOutstanding)*100.0
           } else {
             summary[item[this.revenueBreakdown]] = {
             'source': item[this.revenueBreakdown],
             'commitment': item.Commitment,
             'disbursement': item.Disbursement,
+            'outstanding': item.Outstanding,
             'commitment_pct': (item.Commitment/sumCommitments)*100.0,
-            'disbursement_pct': (item.Disbursement/sumDisbursements)*100.0
+            'disbursement_pct': (item.Disbursement/sumDisbursements)*100.0,
+            'outstanding_pct': (item.Outstanding/sumOutstanding)*100.0
             }
           }
         }
