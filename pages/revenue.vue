@@ -51,7 +51,7 @@
             :options="chartOptions"
             buttons
             button-variant="outline-primary"
-            class="mb-2"></b-form-radio-group>
+            class="mb-2" style="width:100%"></b-form-radio-group>
           <hr />
           <h5>Breakdown by</h5>
           <b-form-group

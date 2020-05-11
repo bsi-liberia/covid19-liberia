@@ -36,7 +36,14 @@
       <b-sidebar id="sidebar-filters" title="Chart options" shadow="lg">
         <div class="px-3 py-2">
           <h5>Display as</h5>
-          <b-form-radio-group v-model="expenditureChartType" :options="chartOptions" buttons button-variant="outline-primary" class="mb-2"></b-form-radio-group>
+          <b-form-radio-group
+            v-model="expenditureChartType"
+            :options="chartOptions"
+            buttons
+            button-variant="outline-primary"
+            class="mb-2"
+            style="width:100%"></b-form-radio-group>
+          <hr />
           <h5>Breakdown by</h5>
           <b-form-group
             class="mb-2">
