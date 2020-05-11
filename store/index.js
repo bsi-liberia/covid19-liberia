@@ -70,6 +70,9 @@ export const actions = {
             'Disbursement': (item, head, resultRow, row, colIDx) => {
               return makeNumber(item)
             },
+            'Outstanding': (item, head, resultRow, row, colIDx) => {
+              return makeNumber(item)
+            },
             'Cash': (item, head, resultRow, row, colIDx) => {
               return makeNumber(item)
             },
