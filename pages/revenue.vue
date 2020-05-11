@@ -72,7 +72,8 @@
           <h5>Filters</h5>
           <b-form-group
             label="On/off budget">
-            <b-form-checkbox-group v-model="revenueOnBudgetFilter" :options="revenueOnBudgetFilterFields" stacked button-variant="outline-secondary" class="mb-2" size="sm"></b-form-checkbox-group>
+            <b-form-checkbox-group v-model="revenueOnBudgetFilter" :options="revenueOnBudgetFilterFields" stacked
+            class="mb-2" size="sm"></b-form-checkbox-group>
           </b-form-group>
           <b-form-group
           label="Donor category">
