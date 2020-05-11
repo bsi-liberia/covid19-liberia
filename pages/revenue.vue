@@ -61,8 +61,15 @@
               :options="revenueBreakdownOptions"></b-form-select>
           </b-form-group>
           <hr />
+          <b-form-radio-group
+            v-model="revenueValueField"
+            :options="revenueValueFields"
+            stacked
+            class="mb-2"
+            size="sm">
+          </b-form-radio-group>
+          <hr />
           <h5>Filters</h5>
-          <b-form-radio-group v-model="revenueValueField" :options="revenueValueFields" buttons button-variant="outline-secondary" class="mb-2" size="sm"></b-form-radio-group>
           <b-form-group
             label="On/off budget">
             <b-form-checkbox-group v-model="revenueOnBudgetFilter" :options="revenueOnBudgetFilterFields" stacked button-variant="outline-secondary" class="mb-2" size="sm"></b-form-checkbox-group>
