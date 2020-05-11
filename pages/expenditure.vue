@@ -50,6 +50,7 @@
             class="mb-2">
             <b-form-select v-model="expenditureBreakdown" :options="expenditureBreakdownOptions"></b-form-select>
           </b-form-group>
+          <hr />
           <h5>Filters</h5>
           <b-form-group
           label="Category">
