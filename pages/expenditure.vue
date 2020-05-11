@@ -19,7 +19,8 @@
           valuePrecision="2"
           :chartType="expenditureChartType"
           pctField="disbursement_pct"
-          :commitments="false" />
+          :commitments="false"
+          :maximumValues="maximumValues" />
         </b-col>
       </b-row>
         <b-button v-b-toggle.sidebar-filters size="sm" variant="secondary" class="mt-2" block>
