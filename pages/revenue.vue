@@ -56,7 +56,9 @@
           <h5>Breakdown by</h5>
           <b-form-group
             class="mb-2">
-            <b-form-select v-model="revenueBreakdown" :options="revenueBreakdownOptions"></b-form-select>
+            <b-form-select
+              v-model="revenueBreakdown"
+              :options="revenueBreakdownOptions"></b-form-select>
           </b-form-group>
           <hr />
           <h5>Filters</h5>
