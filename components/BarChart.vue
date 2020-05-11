@@ -20,6 +20,7 @@
           <b-th></b-th>
           <b-th colspan="2" v-if="commitments" class="number-value">Commitments</b-th>
           <b-th colspan="2" class="number-value">Disbursements</b-th>
+          <b-th colspan="2" v-if="commitments" class="number-value">Outstanding</b-th>
         </b-tr>
       </template>
     </b-table>
@@ -118,6 +119,20 @@ export default {
         },
         {
           key: 'disbursement_pct',
+          label: '%',
+          sortable: true,
+          formatter: 'numberFormatter',
+          class: 'number-value'
+        },
+        {
+          key: 'outstanding',
+          label: 'USD',
+          sortable: true,
+          formatter: 'numberFormatter',
+          class: 'number-value'
+        },
+        {
+          key: 'outstanding_pct',
           label: '%',
           sortable: true,
           formatter: 'numberFormatter',
