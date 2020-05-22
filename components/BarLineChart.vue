@@ -94,7 +94,7 @@ export default {
             },
             scaleLabel: {
               display: true,
-              labelString: 'Number'
+              labelString: 'Number (per day)'
             },
             gridLines: {
               display: false
