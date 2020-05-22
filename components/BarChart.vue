@@ -186,6 +186,9 @@ export default {
             scaleLabel: {
               display: true,
               labelString: this.valueLabel
+            },
+            gridLines: {
+              display: false
             }
           }
         ],
@@ -204,6 +207,9 @@ export default {
                 }
                 return tick
               }
+            },
+            gridLines: {
+              display: false
             }
           }
         ]
@@ -225,7 +231,10 @@ export default {
               return context.dataset.backgroundColor;
             },
             display: (context) => {
-              return this.barChartData[context.dataIndex][this.pctField] > 5
+              if (this.pctField) {
+                return this.barChartData[context.dataIndex][this.pctField] > 5
+              }
+              return true
             },
             borderColor: 'white',
             borderRadius: 2,
@@ -250,10 +259,13 @@ export default {
           backgroundColor: this.colour ? this.colour : this.colours,
           datalabels: {
             formatter: (value, context) => {
-              const pct = this.barChartData[context.dataIndex][this.pctField].toLocaleString(undefined, {
-                maximumFractionDigits: 1
-              })
-              return `${pct}%`
+              if (this.pctField) {
+                const pct = this.barChartData[context.dataIndex][this.pctField].toLocaleString(undefined, {
+                  maximumFractionDigits: 1
+                })
+                return `${pct}%`
+              }
+              return value
             }
           }
         }],
