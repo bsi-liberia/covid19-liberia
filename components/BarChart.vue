@@ -50,7 +50,7 @@ export default {
   },
   props: ['barChartData', 'labelField', 'valueField',
     'pctField', 'valueLabel', 'valuePrecision', 'step',
-    'chartType', 'commitments', 'maximumValues'],
+    'chartType', 'commitments', 'maximumValues', 'colour'],
   data() {
     return {
       colours: [
@@ -166,46 +166,48 @@ export default {
             return label;
           }),
           footer: ((tooltipItem, data) => {
-            const pct = this.barChartData[tooltipItem[0].index][this.pctField].toLocaleString(undefined, {
-                maximumFractionDigits: 1
-              })
-            return `${pct}% of total`
+            if (this.pctField) {
+              const pct = this.barChartData[tooltipItem[0].index][this.pctField].toLocaleString(undefined, {
+                  maximumFractionDigits: 1
+                })
+              return `${pct}% of total`
+            }
           })
         }
       }
       const scales = {
-          yAxes: [
-            {
-              ticks: {
-                beginAtZero: true,
-                precision: this.valuePrecision,
-                stepSize: this.step ? this.step : undefined
-              },
-              scaleLabel: {
-                display: true,
-                labelString: this.valueLabel
-              }
+        yAxes: [
+          {
+            ticks: {
+              beginAtZero: true,
+              precision: this.valuePrecision,
+              stepSize: this.step ? this.step : undefined
+            },
+            scaleLabel: {
+              display: true,
+              labelString: this.valueLabel
             }
-          ],
-          xAxes: [
-            {
-              ticks: {
-                callback: function(tick) {
-                  const characterLimit = 20
-                  if (tick.length >= characterLimit) {
-                    return (
-                      tick
-                        .slice(0, tick.length)
-                        .substring(0, characterLimit - 1)
-                        .trim() + '...'
-                    )
-                  }
-                  return tick
+          }
+        ],
+        xAxes: [
+          {
+            ticks: {
+              callback: function(tick) {
+                const characterLimit = 20
+                if (tick.length >= characterLimit) {
+                  return (
+                    tick
+                      .slice(0, tick.length)
+                      .substring(0, characterLimit - 1)
+                      .trim() + '...'
+                  )
                 }
+                return tick
               }
             }
-          ]
-        }
+          }
+        ]
+      }
       const legend = {
         display: true
       }
@@ -218,24 +220,24 @@ export default {
           padding: 20
         },
         plugins: {
-            datalabels: {
-                backgroundColor: function(context) {
-                  return context.dataset.backgroundColor;
-                },
-                display: (context) => {
-                  return this.barChartData[context.dataIndex][this.pctField] > 5
-                },
-                borderColor: 'white',
-                borderRadius: 2,
-                borderWidth: 2,
-                color: 'white',
-                textShadowColor : '#000000',
-                textShadowBlur: 2,
-                font: {
-                  weight: 'bold'
-                },
-                anchor: 'end'
-            }
+          datalabels: {
+            backgroundColor: function(context) {
+              return context.dataset.backgroundColor;
+            },
+            display: (context) => {
+              return this.barChartData[context.dataIndex][this.pctField] > 5
+            },
+            borderColor: 'white',
+            borderRadius: 2,
+            borderWidth: 2,
+            color: 'white',
+            textShadowColor : '#000000',
+            textShadowBlur: 2,
+            font: {
+              weight: 'bold'
+            },
+            anchor: 'end'
+          }
         }
       }
     },
@@ -245,7 +247,7 @@ export default {
           label: this.labelField,
           fill: true,
           data: this.makeData(),
-          backgroundColor: this.colours,
+          backgroundColor: this.colour ? this.colour : this.colours,
           datalabels: {
             formatter: (value, context) => {
               const pct = this.barChartData[context.dataIndex][this.pctField].toLocaleString(undefined, {
