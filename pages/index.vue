@@ -20,8 +20,8 @@
       <small>Out of USD {{ numberFormatter(disbursed) }} disbursed (cash only)</small>
       <hr />
       <h2>Cases</h2>
+      <h3>Total cases over time</h3>
       <b-badge class="last-updated" variant="light" pill>as of {{ lastUpdatedCases }}</b-badge>
-      <h3>Total cases, over time</h3>
       <BarLineChart :barChartData="cases"
       labelField="Date"
       valueLabel="Number of cases"
@@ -32,6 +32,7 @@
       :maximumValues="100"
       colour="#1f77b4" />
       <h3>By county, to date</h3>
+      <b-badge class="last-updated" variant="light" pill>as of {{ lastUpdatedCases }}</b-badge>
       <BarChart :barChartData="counties"
       labelField="County"
       valueLabel="Number of cases"
