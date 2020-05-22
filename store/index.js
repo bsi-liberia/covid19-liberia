@@ -8,11 +8,16 @@ export const state = () => ({
   revenueData: [],
   expenditureData: [],
   inKindData: [],
+  casesData: [],
+  countiesData: [],
   lastUpdated: null,
   lastUpdatedRevenue: null,
   lastUpdatedExpenditure: null,
   lastUpdatedInKind: null,
-  dataURL: "https://docs.google.com/spreadsheets/d/1gFh5PF4XKoxSSaIxP9E-iZi_xbuyahfAXmhr2j3I1x0/export?format=csv"
+  lastUpdatedCases: null,
+  dataURL: "https://docs.google.com/spreadsheets/d/1gFh5PF4XKoxSSaIxP9E-iZi_xbuyahfAXmhr2j3I1x0/export?format=csv",
+  casesURL: "https://docs.google.com/spreadsheets/d/1ZrsVqMpQHhBCREc8nluxTA1dJ8lKsGVixgp7JKmfE9I/gviz/tq?tqx=out:csv&sheet=Cases",
+  countiesURL: "https://docs.google.com/spreadsheets/d/1ZrsVqMpQHhBCREc8nluxTA1dJ8lKsGVixgp7JKmfE9I/gviz/tq?tqx=out:csv&sheet=Counties"
 })
 
 
@@ -22,6 +27,12 @@ export const mutations = {
   },
   setExpenditureData(state, expenditureData) {
     state.expenditureData = expenditureData
+  },
+  setCasesData(state, casesData) {
+    state.casesData = casesData
+  },
+  setCountiesData(state, countiesData) {
+    state.countiesData = countiesData
   },
   setInKindData(state, inKindData) {
     state.inKindData = inKindData
@@ -43,11 +54,64 @@ export const mutations = {
         return new Date(d)
       }))
     ).toISOString().substr(0, 10)
+  },
+  setLastUpdatedCases(state) {
+    state.lastUpdatedCases = new Date(Math.max.apply(
+      null, state.casesData.map(item => { return new Date(item.Date) })
+    )).toISOString().substr(0, 10)
   }
 }
 
 
 export const actions = {
+  async getCasesData({ commit, state }) {
+    function makeInteger(value) {
+      const _value = parseInt(value)
+      if (isNaN(_value)) { return 0 }
+      return _value
+    }
+    function makeDate(value) {
+      /* Dates are now formatted in ISO format (yyyy-mm-dd) */
+      return new Date(value).toISOString().substr(0, 10)
+    }
+    return await this.$axios.$get(`${state.casesURL}`, {
+
+    }).then(data => {
+      csvtojson({colParser: {
+            'Cases': (item, head, resultRow, row, colIDx) => {
+              return makeInteger(item)
+            },
+            'Deaths': (item, head, resultRow, row, colIDx) => {
+              return makeInteger(item)
+            },
+            'Date': (item, head, resultRow, row, colIDx) => {
+              return makeDate(item)
+            },
+          }}).fromString(data).then((csvJson=> {
+        commit('setCasesData', csvJson)
+        commit('setLastUpdatedCases')
+    }))})
+  },
+  async getCountiesData({ commit, state }) {
+    function makeInteger(value) {
+      const _value = parseInt(value)
+      if (isNaN(_value)) { return 0 }
+      return _value
+    }
+    return await this.$axios.$get(`${state.countiesURL}`, {
+
+    }).then(data => {
+      csvtojson({colParser: {
+            'Cases': (item, head, resultRow, row, colIDx) => {
+              return makeInteger(item)
+            },
+            'Deaths': (item, head, resultRow, row, colIDx) => {
+              return makeInteger(item)
+            }
+          }}).fromString(data).then((csvJson=> {
+        commit('setCountiesData', csvJson)
+    }))})
+  },
   async getData({ commit, state }) {
     function makeNumber(value) {
       const _value = parseFloat(value.replace(/,/g, ""))
