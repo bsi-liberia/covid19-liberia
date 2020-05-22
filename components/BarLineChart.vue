@@ -152,7 +152,23 @@ export default {
         },
         plugins: {
           datalabels: {
-            display: false
+            backgroundColor: function(context) {
+              return context.dataset.backgroundColor;
+            },
+            display: (context) => {
+              console.log(context)
+              return (([0,1].includes(context.datasetIndex)) && (context.dataIndex == this.barChartData.length-1))
+            },
+            borderColor: 'white',
+            borderRadius: 2,
+            borderWidth: 2,
+            color: 'white',
+            textShadowColor : '#000000',
+            textShadowBlur: 2,
+            font: {
+              weight: 'bold'
+            },
+            anchor: 'end'
           }
         }
       }
@@ -175,7 +191,12 @@ export default {
           pointBorderColor: "rgb(255,0,0,0)",
           pointRadius: 1,
           pointHitRadius: 5,
-          pointStyle: "circle"
+          pointStyle: "circle",
+          datalabels: {
+            formatter: (value, context) => {
+              return value
+            }
+          }
         },
         {
           label: "Cases (cumulative)",
@@ -191,7 +212,12 @@ export default {
           pointBorderColor: "rgb(31,119,180,0)",
           pointRadius: 1,
           pointHitRadius: 5,
-          pointStyle: "circle"
+          pointStyle: "circle",
+          datalabels: {
+            formatter: (value, context) => {
+              return value
+            }
+          }
         },
         {
           label: "Deaths",
