@@ -2,10 +2,10 @@
   <div>
     <b-container>
       <h1 class="title">COVID-19 Dashboard</h1>
-      <h3 class="subtitle">Revenue and expenditure data on the COVID-19 response in Liberia </h3>
+      <h3 class="subtitle">Data on the COVID-19 response in Liberia</h3>
       <b-badge class="last-updated" variant="light" pill>as of {{ lastUpdated }}</b-badge>
       <hr />
-      <h2>Summary</h2>
+      <h2>Finances</h2>
       <b-progress :max="committed" variant="success" height="30px" show-label>
         <b-progress-bar :value="disbursed" variant="success" :label="`USD ${numberFormatter(disbursed)} Disbursed`"></b-progress-bar>
         <b-progress-bar :value="committed-disbursed" variant="secondary" striped :label="`USD ${numberFormatter(committed)} Not yet disbursed`"></b-progress-bar>
@@ -18,6 +18,28 @@
         <b-progress-bar :value="disbursed-spent" variant="secondary" striped :label="`USD ${numberFormatter(disbursed-spent)} Unspent`"></b-progress-bar>
       </b-progress>
       <small>Out of USD {{ numberFormatter(disbursed) }} disbursed (cash only)</small>
+      <hr />
+      <h2>Cases</h2>
+      <b-badge class="last-updated" variant="light" pill>as of {{ lastUpdatedCases }}</b-badge>
+      <h3>Total cases, over time</h3>
+      <BarLineChart :barChartData="cases"
+      labelField="Date"
+      valueLabel="Number of cases"
+      valueField="Cases"
+      valuePrecision="0"
+      chartType="bar"
+      :commitments="false"
+      :maximumValues="100"
+      colour="#1f77b4" />
+      <h3>By county, to date</h3>
+      <BarChart :barChartData="counties"
+      labelField="County"
+      valueLabel="Number of cases"
+      valueField="Cases"
+      valuePrecision="0"
+      chartType="bar"
+      :commitments="false"
+      :maximumValues="100" />
       <hr />
       <b-row>
         <b-col md="4">
@@ -64,9 +86,13 @@
 </style>
 <script>
 import config from '../nuxt.config'
+import BarChart from '~/components/BarChart.vue'
+import BarLineChart from '~/components/BarLineChart.vue'
 
 export default {
   components: {
+    BarChart,
+    BarLineChart
   },
   data() {
     return {
@@ -74,8 +100,17 @@ export default {
     }
   },
   computed: {
+    cases() {
+      return this.$store.state.casesData
+    },
+    counties() {
+      return this.$store.state.countiesData
+    },
     lastUpdated() {
       return this.$store.state.lastUpdated
+    },
+    lastUpdatedCases() {
+      return this.$store.state.lastUpdatedCases
     },
     revenueData() {
       return this.$store.state.revenueData
@@ -119,6 +154,8 @@ export default {
     },
     async loadData() {
       await this.$store.dispatch('getData')
+      await this.$store.dispatch('getCasesData')
+      await this.$store.dispatch('getCountiesData')
       this.$nuxt.$loading.finish()
     }
   },
