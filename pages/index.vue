@@ -53,7 +53,7 @@
             <h2>Explore the data</h2>
           </b-col>
         </b-row>
-        <b-row>
+        <b-row class="mb-4">
           <b-col md="3">
             <h3>Cases</h3>
             <b-btn :to="{name: 'cases'}" block variant="primary">
