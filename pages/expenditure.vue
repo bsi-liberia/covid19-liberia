@@ -9,82 +9,92 @@
           <b-badge class="last-updated" variant="light">as of {{ lastUpdated }}</b-badge>
         </b-col>
       </b-row>
-      <h3>Summary by {{ expenditureBreakdownLabel }}</h3>
-      <b-row class="mb-2">
-        <b-col>
-          <BarChart :barChartData="expenditureSummary"
-          labelField="source"
-          valueLabel="Spending (USD)"
-          valueField="disbursement"
-          valuePrecision="2"
-          :chartType="expenditureChartType"
-          pctField="disbursement_pct"
-          :commitments="false"
-          :maximumValues="maximumValues" />
-        </b-col>
-      </b-row>
-        <b-button v-b-toggle.sidebar-filters size="sm" variant="secondary" class="mt-2" block>
-          <font-awesome-icon :icon="['fas', 'cog']" />
-          <b>Chart options</b>
-        </b-button>
-      <hr />
-      <h3>Data</h3>
-        <b-table
-        :items="expenditureData"
-        :fields="expenditureTableFields"
-        striped
-        responsive></b-table>
-      <b-sidebar id="sidebar-filters" title="Chart options" shadow="lg">
-        <div class="px-3 py-2">
-          <h5>Display as</h5>
-          <b-form-radio-group
-            v-model="expenditureChartType"
-            :options="chartOptions"
-            buttons
-            button-variant="outline-primary"
-            class="mb-2"
-            style="width:100%"></b-form-radio-group>
+      <template v-if="expenditureData.length==0">
+        <div class="text-center text-secondary">
           <hr />
-          <h5>Breakdown by</h5>
-          <b-form-group
-            class="mb-2">
-            <b-form-select v-model="expenditureBreakdown" :options="expenditureBreakdownOptions"></b-form-select>
-          </b-form-group>
+          <b-spinner class="align-middle"></b-spinner>
+          <strong>Loading...</strong>
           <hr />
-          <h5>Filters</h5>
-          <b-form-group
-          label="Category">
-            <b-form-checkbox-group
-            v-model="categoryFilter" :options="categoryFilterOptions" stacked></b-form-checkbox-group>
-          </b-form-group>
-          <b-form-group
-          label="Subcategory">
-            <b-form-checkbox-group
-            v-model="subCategoryFilter" :options="subCategoryFilterOptions" stacked></b-form-checkbox-group>
-          </b-form-group>
-          <b-form-group
-          label="Beneficiary Business">
-            <b-form-checkbox-group
-            v-model="beneficiaryBusinessFilter" :options="beneficiaryBusinessFilterOptions" stacked></b-form-checkbox-group>
-          </b-form-group>
-          <b-form-group
-          label="Beneficiary Entity">
-            <b-form-checkbox-group
-            v-model="beneficiaryEntityFilter" :options="beneficiaryEntityFilterOptions" stacked></b-form-checkbox-group>
-          </b-form-group>
-          <b-form-group
-          label="Dates">
-            <b-form-checkbox-group
-            v-model="dateFilter" :options="dateFilterOptions" stacked></b-form-checkbox-group>
-          </b-form-group>
-          <hr />
-          <h5>Maximum values</h5>
-          <b-form-group
-            :description="`Show the top ${maximumValues} values`">
-            <b-form-select v-model="maximumValues" :options="[5, 10, 20, 100]"></b-form-select>
-          </b-form-group>
         </div>
-      </b-sidebar>
+      </template>
+      <template v-else>
+        <h3>Summary by {{ expenditureBreakdownLabel }}</h3>
+        <b-row class="mb-2">
+          <b-col>
+            <BarChart :barChartData="expenditureSummary"
+            labelField="source"
+            valueLabel="Spending (USD)"
+            valueField="disbursement"
+            valuePrecision="2"
+            :chartType="expenditureChartType"
+            pctField="disbursement_pct"
+            :commitments="false"
+            :maximumValues="maximumValues" />
+          </b-col>
+        </b-row>
+          <b-button v-b-toggle.sidebar-filters size="sm" variant="secondary" class="mt-2" block>
+            <font-awesome-icon :icon="['fas', 'cog']" />
+            <b>Chart options</b>
+          </b-button>
+        <hr />
+        <h3>Data</h3>
+          <b-table
+          :items="expenditureData"
+          :fields="expenditureTableFields"
+          striped
+          responsive></b-table>
+        <b-sidebar id="sidebar-filters" title="Chart options" shadow="lg">
+          <div class="px-3 py-2">
+            <h5>Display as</h5>
+            <b-form-radio-group
+              v-model="expenditureChartType"
+              :options="chartOptions"
+              buttons
+              button-variant="outline-primary"
+              class="mb-2"
+              style="width:100%"></b-form-radio-group>
+            <hr />
+            <h5>Breakdown by</h5>
+            <b-form-group
+              class="mb-2">
+              <b-form-select v-model="expenditureBreakdown" :options="expenditureBreakdownOptions"></b-form-select>
+            </b-form-group>
+            <hr />
+            <h5>Filters</h5>
+            <b-form-group
+            label="Category">
+              <b-form-checkbox-group
+              v-model="categoryFilter" :options="categoryFilterOptions" stacked></b-form-checkbox-group>
+            </b-form-group>
+            <b-form-group
+            label="Subcategory">
+              <b-form-checkbox-group
+              v-model="subCategoryFilter" :options="subCategoryFilterOptions" stacked></b-form-checkbox-group>
+            </b-form-group>
+            <b-form-group
+            label="Beneficiary Business">
+              <b-form-checkbox-group
+              v-model="beneficiaryBusinessFilter" :options="beneficiaryBusinessFilterOptions" stacked></b-form-checkbox-group>
+            </b-form-group>
+            <b-form-group
+            label="Beneficiary Entity">
+              <b-form-checkbox-group
+              v-model="beneficiaryEntityFilter" :options="beneficiaryEntityFilterOptions" stacked></b-form-checkbox-group>
+            </b-form-group>
+            <b-form-group
+            label="Dates">
+              <b-form-checkbox-group
+              v-model="dateFilter" :options="dateFilterOptions" stacked></b-form-checkbox-group>
+            </b-form-group>
+            <hr />
+            <h5>Maximum values</h5>
+            <b-form-group
+              :description="`Show the top ${maximumValues} values`">
+              <b-form-select v-model="maximumValues" :options="[5, 10, 20, 100]"></b-form-select>
+            </b-form-group>
+          </div>
+        </b-sidebar>
+      </template>
     </b-container>
   </div>
 </template>
