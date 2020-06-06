@@ -1,7 +1,9 @@
 <template>
   <div>
     <b-navbar toggleable="lg" type="dark" class="covid-navbar">
-      <b-navbar-brand :to="'/'">COVID-19 Dashboard</b-navbar-brand>
+      <b-navbar-brand :to="'/'" class="covid-brand">
+        <img src="/flag-lr.png" alt="Flag of Liberia" />
+        COVID-19 Dashboard</b-navbar-brand>
 
       <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
@@ -31,8 +33,8 @@
     <footer>
       <b-container>
         <b-row>
-          <b-col class="mt-2 mb-2">
-            <!--<img src="logo_mfdp.png" width="250px" />-->
+          <b-col class="mt-4 mb-4 text-center">
+            <img src="coat_of_arms_liberia.png" class="liberia-coat-of-arms"/>
           </b-col>
         </b-row>
       </b-container>
@@ -65,6 +67,14 @@ footer {
 
 .covid-navbar {
   background-color: #55a44f;
+}
+.covid-brand {
+}
+.covid-brand img {
+  padding-right: 5px;
+}
+.liberia-coat-of-arms {
+  width: 150px;
 }
 
 .covid-container {
