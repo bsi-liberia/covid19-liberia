@@ -9,68 +9,78 @@
           <b-badge class="last-updated" variant="light">as of {{ lastUpdated }}</b-badge>
         </b-col>
       </b-row>
-      <h3>Summary by {{ inKindBreakdownLabel }}</h3>
-      <b-row class="mb-2">
-        <b-col>
-          <BarChart :barChartData="inKindSummary"
-          labelField="source"
-          valueLabel="Funding (USD) equivalent"
-          valueField="disbursement"
-          valuePrecision="2"
-          :chartType="inKindChartType"
-          pctField="disbursement_pct"
-          :commitments="false" />
-        </b-col>
-      </b-row>
-        <b-button v-b-toggle.sidebar-filters size="sm" variant="secondary" class="mt-2" block>
-          <font-awesome-icon :icon="['fas', 'cog']" />
-          <b>Chart options</b>
-        </b-button>
-      <hr />
-      <h3>Data</h3>
-        <b-table
-        :items="inKindData"
-        :fields="inKindTableFields"
-        striped
-        responsive></b-table>
-      <b-sidebar id="sidebar-filters" title="Chart options" shadow="lg">
-        <div class="px-3 py-2">
-          <h5>Display as</h5>
-          <b-form-radio-group v-model="inKindChartType" :options="chartOptions" buttons button-variant="outline-primary" class="mb-2"></b-form-radio-group>
-          <h5>Breakdown by</h5>
-          <b-form-group
-            class="mb-2">
-            <b-form-select v-model="inKindBreakdown" :options="inKindBreakdownOptions"></b-form-select>
-          </b-form-group>
-          <h5>Filters</h5>
-          <b-form-group
-          label="Response Center">
-            <b-form-checkbox-group
-            v-model="responseCenterFilter" :options="responseCenterFilterOptions" stacked></b-form-checkbox-group>
-          </b-form-group>
-          <b-form-group
-          label="Donor Category">
-            <b-form-checkbox-group
-            v-model="categoryFilter" :options="categoryFilterOptions" stacked></b-form-checkbox-group>
-          </b-form-group>
-          <b-form-group
-          label="Donor Subcategory">
-            <b-form-checkbox-group
-            v-model="subCategoryFilter" :options="subCategoryFilterOptions" stacked></b-form-checkbox-group>
-          </b-form-group>
-          <b-form-group
-          label="Dates">
-            <b-form-checkbox-group
-            v-model="dateFilter" :options="dateFilterOptions" stacked></b-form-checkbox-group>
-          </b-form-group>
+      <template v-if="inKindData.length==0">
+        <div class="text-center text-secondary">
           <hr />
-          <h5>Maximum values</h5>
-          <b-form-group
-            :description="`Show the top ${maximumValues} values`">
-            <b-form-select v-model="maximumValues" :options="[5, 10, 20, 100]"></b-form-select>
-          </b-form-group>
+          <b-spinner class="align-middle"></b-spinner>
+          <strong>Loading...</strong>
+          <hr />
         </div>
-      </b-sidebar>
+      </template>
+      <template v-else>
+        <h3>Summary by {{ inKindBreakdownLabel }}</h3>
+        <b-row class="mb-2">
+          <b-col>
+            <BarChart :barChartData="inKindSummary"
+            labelField="source"
+            valueLabel="Funding (USD) equivalent"
+            valueField="disbursement"
+            valuePrecision="2"
+            :chartType="inKindChartType"
+            pctField="disbursement_pct"
+            :commitments="false" />
+          </b-col>
+        </b-row>
+          <b-button v-b-toggle.sidebar-filters size="sm" variant="secondary" class="mt-2" block>
+            <font-awesome-icon :icon="['fas', 'cog']" />
+            <b>Chart options</b>
+          </b-button>
+        <hr />
+        <h3>Data</h3>
+          <b-table
+          :items="inKindData"
+          :fields="inKindTableFields"
+          striped
+          responsive></b-table>
+        <b-sidebar id="sidebar-filters" title="Chart options" shadow="lg">
+          <div class="px-3 py-2">
+            <h5>Display as</h5>
+            <b-form-radio-group v-model="inKindChartType" :options="chartOptions" buttons button-variant="outline-primary" class="mb-2"></b-form-radio-group>
+            <h5>Breakdown by</h5>
+            <b-form-group
+              class="mb-2">
+              <b-form-select v-model="inKindBreakdown" :options="inKindBreakdownOptions"></b-form-select>
+            </b-form-group>
+            <h5>Filters</h5>
+            <b-form-group
+            label="Response Center">
+              <b-form-checkbox-group
+              v-model="responseCenterFilter" :options="responseCenterFilterOptions" stacked></b-form-checkbox-group>
+            </b-form-group>
+            <b-form-group
+            label="Donor Category">
+              <b-form-checkbox-group
+              v-model="categoryFilter" :options="categoryFilterOptions" stacked></b-form-checkbox-group>
+            </b-form-group>
+            <b-form-group
+            label="Donor Subcategory">
+              <b-form-checkbox-group
+              v-model="subCategoryFilter" :options="subCategoryFilterOptions" stacked></b-form-checkbox-group>
+            </b-form-group>
+            <b-form-group
+            label="Dates">
+              <b-form-checkbox-group
+              v-model="dateFilter" :options="dateFilterOptions" stacked></b-form-checkbox-group>
+            </b-form-group>
+            <hr />
+            <h5>Maximum values</h5>
+            <b-form-group
+              :description="`Show the top ${maximumValues} values`">
+              <b-form-select v-model="maximumValues" :options="[5, 10, 20, 100]"></b-form-select>
+            </b-form-group>
+          </div>
+        </b-sidebar>
+      </template>
     </b-container>
   </div>
 </template>
