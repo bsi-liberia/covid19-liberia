@@ -1,44 +1,42 @@
 <template>
   <div>
     <b-navbar toggleable="lg" type="dark" class="covid-navbar">
-      <b-navbar-brand :to="'/'" class="covid-brand">
-        <img src="/flag-lr.png" alt="Flag of Liberia" />
-        COVID-19 Dashboard</b-navbar-brand>
+      <b-container>
+        <b-navbar-brand :to="'/'" class="covid-brand">
+          <img src="/flag-lr.png" alt="Flag of Liberia" />
+          COVID-19 Dashboard</b-navbar-brand>
 
-      <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
+        <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
-      <b-collapse id="nav-collapse" is-nav>
-        <b-navbar-nav>
-          <b-nav-item exact-active-class="active" :to="{name: 'index'}">
-            Summary
-          </b-nav-item>
-          <b-nav-item active-class="active" :to="{name: 'cases'}">
-            Cases
-          </b-nav-item>
-          <b-nav-item active-class="active" :to="{name: 'revenue'}">
-            Revenue
-          </b-nav-item>
-          <b-nav-item active-class="active" :to="{name: 'expenditure'}">
-            Expenditure
-          </b-nav-item>
-          <b-nav-item active-class="active" :to="{name: 'in-kind'}">
-            In Kind Contributions
-          </b-nav-item>
-        </b-navbar-nav>
-      </b-collapse>
+        <b-collapse id="nav-collapse" is-nav>
+          <b-navbar-nav>
+            <b-nav-item exact-active-class="active" :to="{name: 'index'}">
+              Summary
+            </b-nav-item>
+            <b-nav-item active-class="active" :to="{name: 'cases'}">
+              Cases
+            </b-nav-item>
+            <b-nav-item active-class="active" :to="{name: 'revenue'}">
+              Revenue
+            </b-nav-item>
+            <b-nav-item active-class="active" :to="{name: 'expenditure'}">
+              Expenditure
+            </b-nav-item>
+            <b-nav-item active-class="active" :to="{name: 'in-kind'}">
+              In Kind Contributions
+            </b-nav-item>
+          </b-navbar-nav>
+          <b-navbar-nav class="ml-auto">
+            <b-nav-item active-class="active" :to="{name: 'about'}">
+              About
+            </b-nav-item>
+          </b-navbar-nav>
+        </b-collapse>
+      </b-container>
     </b-navbar>
     <b-container fluid class="covid-container">
       <nuxt />
     </b-container>
-    <footer>
-      <b-container>
-        <b-row>
-          <b-col class="mt-4 mb-4 text-center">
-            <img src="coat_of_arms_liberia.png" class="liberia-coat-of-arms"/>
-          </b-col>
-        </b-row>
-      </b-container>
-    </footer>
   </div>
 </template>
 
@@ -72,9 +70,6 @@ footer {
 }
 .covid-brand img {
   padding-right: 5px;
-}
-.liberia-coat-of-arms {
-  width: 150px;
 }
 
 .covid-container {
