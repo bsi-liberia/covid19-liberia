@@ -79,7 +79,7 @@ footer {
 
 .covid-container {
   margin: 0px auto;
-  min-height: 100vh;
+  min-height: 70vh;
   min-width:100%;
   padding-top:40px;
   padding-bottom: 40px;
