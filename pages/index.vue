@@ -3,66 +3,83 @@
     <b-container>
       <h1 class="title">COVID-19 Dashboard</h1>
       <h3 class="subtitle">Data on the COVID-19 response in Liberia</h3>
-      <b-badge class="last-updated" variant="light" pill>as of {{ lastUpdated }}</b-badge>
-      <hr />
-      <h2>Finances</h2>
-      <b-progress :max="committed" variant="success" height="30px" show-label>
-        <b-progress-bar :value="disbursed" variant="success" :label="`USD ${numberFormatter(disbursed)} Disbursed`"></b-progress-bar>
-        <b-progress-bar :value="committed-disbursed" variant="secondary" striped :label="`USD ${numberFormatter(committed)} Not yet disbursed`"></b-progress-bar>
-      </b-progress>
-      <small>Out of USD {{ numberFormatter(committed) }} committed (cash only)</small>
-      <hr />
-      <h3>Usage of funds</h3>
-      <b-progress :max="disbursed" variant="success" height="30px" show-label>
-        <b-progress-bar :value="spent" variant="primary" :label="`USD ${numberFormatter(spent)} Spent`"></b-progress-bar>
-        <b-progress-bar :value="disbursed-spent" variant="secondary" striped :label="`USD ${numberFormatter(disbursed-spent)} Unspent`"></b-progress-bar>
-      </b-progress>
-      <small>Out of USD {{ numberFormatter(disbursed) }} disbursed (cash only)</small>
-      <hr />
-      <h2>Cases</h2>
-      <h3>Total cases over time</h3>
-      <b-badge class="last-updated" variant="light" pill>as of {{ lastUpdatedCases }}</b-badge>
-      <BarLineChart :barChartData="cases"
-      labelField="Date"
-      valueLabel="Number of cases"
-      valueField="Cases"
-      valuePrecision="0"
-      chartType="bar"
-      :commitments="false"
-      :maximumValues="100"
-      colour="#1f77b4" />
-      <hr />
-      <h3>By county, to date</h3>
-      <b-badge class="last-updated" variant="light" pill>as of {{ lastUpdatedCases }}</b-badge>
-      <BarChart :barChartData="counties"
-      labelField="County"
-      valueLabel="Number of cases"
-      valueField="Cases"
-      valuePrecision="0"
-      chartType="bar"
-      :commitments="false"
-      :maximumValues="100" />
-      <hr />
-      <b-row>
-        <b-col md="4">
-          <h3>Revenue</h3>
-          <b-btn :to="{name: 'revenue'}" block variant="primary">
-            View {{ revenueData.length }} revenue entries &raquo;
-          </b-btn>
-        </b-col>
-        <b-col md="4">
-          <h3>Expenditure</h3>
-          <b-btn :to="{name: 'expenditure'}" block variant="primary">
-            View {{ expenditureData.length }} expenditure entries &raquo;
-          </b-btn>
-        </b-col>
-        <b-col md="4">
-          <h3>In-Kind</h3>
-          <b-btn :to="{name: 'in-kind'}" block variant="primary">
-            View {{ inKindData.length }} in-kind contributions &raquo;
-          </b-btn>
-        </b-col>
-      </b-row>
+      <template v-if="revenueData.length==0">
+        <div class="text-center text-secondary">
+          <hr />
+          <b-spinner class="align-middle"></b-spinner>
+          <strong>Loading...</strong>
+          <hr />
+        </div>
+      </template>
+      <template v-else>
+        <b-badge class="last-updated" variant="light" pill>as of {{ lastUpdated }}</b-badge>
+        <hr />
+        <h2>Finances</h2>
+        <b-progress :max="committed" variant="success" height="30px" show-label>
+          <b-progress-bar :value="disbursed" variant="success" :label="`USD ${numberFormatter(disbursed)} Disbursed`"></b-progress-bar>
+          <b-progress-bar :value="committed-disbursed" variant="secondary" striped :label="`USD ${numberFormatter(committed)} Not yet disbursed`"></b-progress-bar>
+        </b-progress>
+        <small>Out of USD {{ numberFormatter(committed) }} committed (cash only)</small>
+        <hr />
+        <h3>Usage of funds</h3>
+        <b-progress :max="disbursed" variant="success" height="30px" show-label>
+          <b-progress-bar :value="spent" variant="primary" :label="`USD ${numberFormatter(spent)} Spent`"></b-progress-bar>
+          <b-progress-bar :value="disbursed-spent" variant="secondary" striped :label="`USD ${numberFormatter(disbursed-spent)} Unspent`"></b-progress-bar>
+        </b-progress>
+        <small>Out of USD {{ numberFormatter(disbursed) }} disbursed (cash only)</small>
+        <hr />
+        <h2>Cases</h2>
+        <template v-if="cases.length==0">
+          <div class="text-center text-secondary">
+            <hr />
+            <b-spinner class="align-middle"></b-spinner>
+            <strong>Loading...</strong>
+            <hr />
+          </div>
+        </template>
+        <template v-else>
+          <b-row>
+            <b-col>
+              <h3><b-badge variant="primary" style="width:100%">{{ totalCases }} Cases</b-badge></h3>
+            </b-col>
+            <b-col>
+              <h3><b-badge fill variant="danger" style="width:100%">{{ totalDeaths }} Deaths</b-badge></h3>
+            </b-col>
+          </b-row>
+        </template>
+        <hr />
+        <b-row>
+          <b-col>
+            <h2>Explore the data</h2>
+          </b-col>
+        </b-row>
+        <b-row>
+          <b-col md="3">
+            <h3>Cases</h3>
+            <b-btn :to="{name: 'cases'}" block variant="primary">
+              Cases &raquo;
+            </b-btn>
+          </b-col>
+          <b-col md="3">
+            <h3>Revenue</h3>
+            <b-btn :to="{name: 'revenue'}" block variant="primary">
+              {{ revenueData.length }} revenue entries &raquo;
+            </b-btn>
+          </b-col>
+          <b-col md="3">
+            <h3>Expenditure</h3>
+            <b-btn :to="{name: 'expenditure'}" block variant="primary">
+              {{ expenditureData.length }} expenditure entries &raquo;
+            </b-btn>
+          </b-col>
+          <b-col md="3">
+            <h3>In-Kind</h3>
+            <b-btn :to="{name: 'in-kind'}" block variant="primary">
+              {{ inKindData.length }} in-kind contributions &raquo;
+            </b-btn>
+          </b-col>
+        </b-row>
+      </template>
     </b-container>
   </div>
 </template>
@@ -104,6 +121,18 @@ export default {
   computed: {
     cases() {
       return this.$store.state.casesData
+    },
+    totalCases() {
+      return this.$store.state.casesData.reduce((total, item) => {
+        total += item.Cases
+        return total
+      }, 0)
+    },
+    totalDeaths() {
+      return this.$store.state.casesData.reduce((total, item) => {
+        total += item.Deaths
+        return total
+      }, 0)
     },
     counties() {
       return this.$store.state.countiesData
@@ -165,8 +194,10 @@ export default {
   },
   mounted() {
     this.$nextTick(() => {
-      this.$nuxt.$loading.start()
-      this.loadData()
+      if (this.cases.length == 0) {
+        this.$nuxt.$loading.start()
+        this.loadData()
+      }
     })
   }
 }
