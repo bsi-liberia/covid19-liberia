@@ -10,6 +10,9 @@
           <b-nav-item exact-active-class="active" :to="{name: 'index'}">
             Summary
           </b-nav-item>
+          <b-nav-item active-class="active" :to="{name: 'cases'}">
+            Cases
+          </b-nav-item>
           <b-nav-item active-class="active" :to="{name: 'revenue'}">
             Revenue
           </b-nav-item>
