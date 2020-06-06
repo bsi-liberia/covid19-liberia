@@ -9,100 +9,111 @@
           <b-badge class="last-updated" variant="light">as of {{ lastUpdated }}</b-badge>
         </b-col>
       </b-row>
-      <h3>Summary by {{ revenueBreakdownLabel }}</h3>
-      <b-row class="mb-2">
-        <b-col>
-          <BarChart :barChartData="revenueSummary"
-          labelField="source"
-          valueLabel="Funding (USD)"
-          :valueField="revenueValueField"
-          valuePrecision="2"
-          :chartType="revenueChartType"
-          :pctField="`${revenueValueField}_pct`"
-          :commitments="true"
-          :maximumValues="maximumValues" />
-        </b-col>
-      </b-row>
-      <b-button v-b-toggle.sidebar-filters size="sm" variant="secondary" class="mt-2" block>
-        <font-awesome-icon :icon="['fas', 'cog']" />
-        <b>Chart options</b>
-      </b-button>
-      <hr />
-      <h3>Data</h3>
-      <b-table
-      :items="revenueData"
-      :fields="revenueTableFields"
-      striped
-      responsive>
-        <template v-slot:cell(OnBudget)="data">
-          <b-badge v-if="data.item['On Budget']>0" variant="primary">On Budget</b-badge>
-          <b-badge v-if="data.item['Off Budget']>0">Off budget</b-badge>
-        </template>
-        <template v-slot:cell(GrantLoan)="data">
-          <b-badge v-if="data.item['Grant Component']>0" variant="primary">Grant</b-badge>
-          <b-badge v-if="data.item['Loan Component']>0">Loan</b-badge>
-        </template>
-      </b-table>
-      <b-sidebar id="sidebar-filters" title="Chart options" shadow>
-        <div class="px-3 py-2">
-          <h5>Display as</h5>
-          <b-form-radio-group
-            v-model="revenueChartType"
-            :options="chartOptions"
-            buttons
-            button-variant="outline-primary"
-            class="mb-2" style="width:100%"></b-form-radio-group>
+
+      <template v-if="revenueData.length==0">
+        <div class="text-center text-secondary">
           <hr />
-          <h5>Breakdown by</h5>
-          <b-form-group
-            class="mb-2">
-            <b-form-select
-              v-model="revenueBreakdown"
-              :options="revenueBreakdownOptions"></b-form-select>
-          </b-form-group>
+          <b-spinner class="align-middle"></b-spinner>
+          <strong>Loading...</strong>
           <hr />
-          <b-form-radio-group
-            v-model="revenueValueField"
-            :options="revenueValueFields"
-            stacked
-            class="mb-2"
-            size="sm">
-          </b-form-radio-group>
-          <hr />
-          <h5>Filters</h5>
-          <b-form-group
-            label="On/off budget">
-            <b-form-checkbox-group v-model="revenueOnBudgetFilter" :options="revenueOnBudgetFilterFields" stacked
-            class="mb-2" size="sm"></b-form-checkbox-group>
-          </b-form-group>
-          <b-form-group
-          label="Donor category">
-            <b-form-checkbox-group
-            v-model="categoryFilter" :options="categoryFilterOptions" stacked></b-form-checkbox-group>
-          </b-form-group>
-          <b-form-group
-          label="Donor subcategory">
-            <b-form-checkbox-group
-            v-model="subCategoryFilter" :options="subCategoryFilterOptions" stacked></b-form-checkbox-group>
-          </b-form-group>
-          <b-form-group
-          label="Donors">
-            <b-form-checkbox-group
-            v-model="donorFilter" :options="donorFilterOptions" stacked></b-form-checkbox-group>
-          </b-form-group>
-          <b-form-group
-          label="Dates">
-            <b-form-checkbox-group
-            v-model="dateFilter" :options="dateFilterOptions" stacked></b-form-checkbox-group>
-          </b-form-group>
-          <hr />
-          <h5>Maximum values</h5>
-          <b-form-group
-            :description="`Show the top ${maximumValues} values`">
-            <b-form-select v-model="maximumValues" :options="[5, 10, 20, 100]"></b-form-select>
-          </b-form-group>
         </div>
-      </b-sidebar>
+      </template>
+      <template v-else>
+        <h3>Summary by {{ revenueBreakdownLabel }}</h3>
+        <b-row class="mb-2">
+          <b-col>
+            <BarChart :barChartData="revenueSummary"
+            labelField="source"
+            valueLabel="Funding (USD)"
+            :valueField="revenueValueField"
+            valuePrecision="2"
+            :chartType="revenueChartType"
+            :pctField="`${revenueValueField}_pct`"
+            :commitments="true"
+            :maximumValues="maximumValues" />
+          </b-col>
+        </b-row>
+        <b-button v-b-toggle.sidebar-filters size="sm" variant="secondary" class="mt-2" block>
+          <font-awesome-icon :icon="['fas', 'cog']" />
+          <b>Chart options</b>
+        </b-button>
+        <hr />
+        <h3>Data</h3>
+        <b-table
+        :items="revenueData"
+        :fields="revenueTableFields"
+        striped
+        responsive>
+          <template v-slot:cell(OnBudget)="data">
+            <b-badge v-if="data.item['On Budget']>0" variant="primary">On Budget</b-badge>
+            <b-badge v-if="data.item['Off Budget']>0">Off budget</b-badge>
+          </template>
+          <template v-slot:cell(GrantLoan)="data">
+            <b-badge v-if="data.item['Grant Component']>0" variant="primary">Grant</b-badge>
+            <b-badge v-if="data.item['Loan Component']>0">Loan</b-badge>
+          </template>
+        </b-table>
+        <b-sidebar id="sidebar-filters" title="Chart options" shadow>
+          <div class="px-3 py-2">
+            <h5>Display as</h5>
+            <b-form-radio-group
+              v-model="revenueChartType"
+              :options="chartOptions"
+              buttons
+              button-variant="outline-primary"
+              class="mb-2" style="width:100%"></b-form-radio-group>
+            <hr />
+            <h5>Breakdown by</h5>
+            <b-form-group
+              class="mb-2">
+              <b-form-select
+                v-model="revenueBreakdown"
+                :options="revenueBreakdownOptions"></b-form-select>
+            </b-form-group>
+            <hr />
+            <b-form-radio-group
+              v-model="revenueValueField"
+              :options="revenueValueFields"
+              stacked
+              class="mb-2"
+              size="sm">
+            </b-form-radio-group>
+            <hr />
+            <h5>Filters</h5>
+            <b-form-group
+              label="On/off budget">
+              <b-form-checkbox-group v-model="revenueOnBudgetFilter" :options="revenueOnBudgetFilterFields" stacked
+              class="mb-2" size="sm"></b-form-checkbox-group>
+            </b-form-group>
+            <b-form-group
+            label="Donor category">
+              <b-form-checkbox-group
+              v-model="categoryFilter" :options="categoryFilterOptions" stacked></b-form-checkbox-group>
+            </b-form-group>
+            <b-form-group
+            label="Donor subcategory">
+              <b-form-checkbox-group
+              v-model="subCategoryFilter" :options="subCategoryFilterOptions" stacked></b-form-checkbox-group>
+            </b-form-group>
+            <b-form-group
+            label="Donors">
+              <b-form-checkbox-group
+              v-model="donorFilter" :options="donorFilterOptions" stacked></b-form-checkbox-group>
+            </b-form-group>
+            <b-form-group
+            label="Dates">
+              <b-form-checkbox-group
+              v-model="dateFilter" :options="dateFilterOptions" stacked></b-form-checkbox-group>
+            </b-form-group>
+            <hr />
+            <h5>Maximum values</h5>
+            <b-form-group
+              :description="`Show the top ${maximumValues} values`">
+              <b-form-select v-model="maximumValues" :options="[5, 10, 20, 100]"></b-form-select>
+            </b-form-group>
+          </div>
+        </b-sidebar>
+      </template>
     </b-container>
   </div>
 </template>
