@@ -7,6 +7,8 @@
         </b-col>
         <b-col md="4" class="text-md-right">
           <b-badge class="last-updated" variant="light">as of {{ lastUpdated }}</b-badge>
+          <br />
+          <SocialMedia url="http://covid19response.gov.lr/expenditure/" />
         </b-col>
       </b-row>
       <template v-if="expenditureData.length==0">
@@ -105,10 +107,12 @@
 <script>
 import config from '../nuxt.config'
 import BarChart from '~/components/BarChart.vue'
+import SocialMedia from '~/components/SocialMedia.vue'
 
 export default {
   components: {
-    BarChart
+    BarChart,
+    SocialMedia
   },
   data() {
     return {
