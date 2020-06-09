@@ -55,12 +55,18 @@ export default {
     'bootstrap-vue/nuxt',
     // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/axios',
+    // Doc: https://github.com/nicolasbeauvais/vue-social-sharing
+    'vue-social-sharing/nuxt',
     [
       'nuxt-fontawesome', {
         imports: [
          {
            set: '@fortawesome/free-solid-svg-icons',
            icons: ['fas']
+         },
+         {
+           set: '@fortawesome/free-brands-svg-icons',
+           icons: ['fab']
          }
        ]
     }]
