@@ -156,7 +156,6 @@ export default {
               return context.dataset.backgroundColor;
             },
             display: (context) => {
-              console.log(context)
               return (([0,1].includes(context.datasetIndex)) && (context.dataIndex == this.barChartData.length-1))
             },
             borderColor: 'white',
