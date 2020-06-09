@@ -1,7 +1,16 @@
 <template>
   <div>
     <b-container>
-      <h2>Cases</h2>
+      <b-row>
+        <b-col md="8">
+          <h2>Cases</h2>
+        </b-col>
+        <b-col md="4" class="text-md-right">
+          <b-badge class="last-updated" variant="light" pill>as of {{ lastUpdatedCases }}</b-badge>
+          <br />
+          <SocialMedia url="http://covid19response.gov.lr/cases/" />
+        </b-col>
+      </b-row>
       <template v-if="cases.length==0">
         <div class="text-center text-secondary">
           <hr />
@@ -12,7 +21,6 @@
       </template>
       <template v-else>
         <h3>Total cases over time</h3>
-        <b-badge class="last-updated" variant="light" pill>as of {{ lastUpdatedCases }}</b-badge>
         <BarLineChart :barChartData="cases"
         labelField="Date"
         valueLabel="Number of cases"
@@ -61,11 +69,13 @@
 import config from '../nuxt.config'
 import BarChart from '~/components/BarChart.vue'
 import BarLineChart from '~/components/BarLineChart.vue'
+import SocialMedia from '~/components/SocialMedia.vue'
 
 export default {
   components: {
     BarChart,
-    BarLineChart
+    BarLineChart,
+    SocialMedia
   },
   data() {
     return {
