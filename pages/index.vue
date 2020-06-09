@@ -13,6 +13,7 @@
       </template>
       <template v-else>
         <b-badge class="last-updated" variant="light" pill>as of {{ lastUpdated }}</b-badge>
+        <SocialMedia url="http://covid19response.gov.lr/revenue/" />
         <hr />
         <h2>Finances</h2>
         <b-progress :max="committed" variant="success" height="30px" show-label>
@@ -107,11 +108,13 @@
 import config from '../nuxt.config'
 import BarChart from '~/components/BarChart.vue'
 import BarLineChart from '~/components/BarLineChart.vue'
+import SocialMedia from '~/components/SocialMedia.vue'
 
 export default {
   components: {
     BarChart,
-    BarLineChart
+    BarLineChart,
+    SocialMedia
   },
   data() {
     return {
