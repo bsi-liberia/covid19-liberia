@@ -15,9 +15,9 @@ export const state = () => ({
   lastUpdatedExpenditure: null,
   lastUpdatedInKind: null,
   lastUpdatedCases: null,
-  dataURL: "https://docs.google.com/spreadsheets/d/1gFh5PF4XKoxSSaIxP9E-iZi_xbuyahfAXmhr2j3I1x0/export?format=csv",
-  casesURL: "https://docs.google.com/spreadsheets/d/1ZrsVqMpQHhBCREc8nluxTA1dJ8lKsGVixgp7JKmfE9I/gviz/tq?tqx=out:csv&sheet=Cases",
-  countiesURL: "https://docs.google.com/spreadsheets/d/1ZrsVqMpQHhBCREc8nluxTA1dJ8lKsGVixgp7JKmfE9I/gviz/tq?tqx=out:csv&sheet=Counties"
+  dataURL: "https://github.com/bsi-liberia/covid19-liberia-data/raw/gh-pages/data.csv",
+  casesURL: "https://github.com/bsi-liberia/covid19-liberia-data/raw/gh-pages/cases.csv",
+  countiesURL: "https://github.com/bsi-liberia/covid19-liberia-data/raw/gh-pages/counties.csv"
 })
 
 
