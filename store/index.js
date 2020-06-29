@@ -3,7 +3,6 @@ import config from '../nuxt.config'
 import Vue from 'vue'
 import csvtojson from 'csvtojson'
 
-
 export const state = () => ({
   revenueData: [],
   expenditureData: [],
@@ -15,9 +14,9 @@ export const state = () => ({
   lastUpdatedExpenditure: null,
   lastUpdatedInKind: null,
   lastUpdatedCases: null,
-  dataURL: "https://raw.githubusercontent.com/bsi-liberia/covid19-liberia-data/gh-pages/data.csv",
-  casesURL: "https://raw.githubusercontent.com/bsi-liberia/covid19-liberia-data/gh-pages/cases.csv",
-  countiesURL: "https://raw.githubusercontent.com/bsi-liberia/covid19-liberia-data/gh-pages/counties.csv"
+  dataURL: "http://raw.githubusercontent.com/bsi-liberia/covid19-liberia-data/gh-pages/data.csv",
+  casesURL: "http://raw.githubusercontent.com/bsi-liberia/covid19-liberia-data/gh-pages/cases.csv",
+  countiesURL: "http://raw.githubusercontent.com/bsi-liberia/covid19-liberia-data/gh-pages/counties.csv"
 })
 
 
@@ -74,9 +73,9 @@ export const actions = {
       /* Dates are now formatted in ISO format (yyyy-mm-dd) */
       return new Date(value).toISOString().substr(0, 10)
     }
-    return await this.$axios.$get(`${state.casesURL}`, {
+    return await axios.get(`${state.casesURL}`, {
 
-    }).then(data => {
+    }).then(response => {
       csvtojson({colParser: {
             'Cases': (item, head, resultRow, row, colIDx) => {
               return makeInteger(item)
@@ -87,7 +86,7 @@ export const actions = {
             'Date': (item, head, resultRow, row, colIDx) => {
               return makeDate(item)
             },
-          }}).fromString(data).then((csvJson=> {
+          }}).fromString(response.data).then((csvJson=> {
         commit('setCasesData', csvJson)
         commit('setLastUpdatedCases')
     }))})
@@ -98,9 +97,9 @@ export const actions = {
       if (isNaN(_value)) { return 0 }
       return _value
     }
-    return await this.$axios.$get(`${state.countiesURL}`, {
+    return await axios.get(`${state.countiesURL}`, {
 
-    }).then(data => {
+    }).then(response => {
       csvtojson({colParser: {
             'Cases': (item, head, resultRow, row, colIDx) => {
               return makeInteger(item)
@@ -108,7 +107,7 @@ export const actions = {
             'Deaths': (item, head, resultRow, row, colIDx) => {
               return makeInteger(item)
             }
-          }}).fromString(data).then((csvJson=> {
+          }}).fromString(response.data).then((csvJson=> {
         commit('setCountiesData', csvJson)
     }))})
   },
@@ -123,10 +122,10 @@ export const actions = {
       return new Date(value)
     }
 
-    return await this.$axios.$get(`${state.dataURL}`, {
+    return await axios.get(`${state.dataURL}`, {
         headers: {
         }
-      }).then(data => {
+      }).then(response => {
         csvtojson({colParser: {
             'Commitment': (item, head, resultRow, row, colIDx) => {
               return makeNumber(item)
@@ -158,7 +157,7 @@ export const actions = {
             'Dates': (item, head, resultRow, row, colIDx) => {
               return makeDate(item)
             }
-          }}).fromString(data).then((csvJson=> {
+          }}).fromString(response.data).then((csvJson=> {
           commit('setRevenueData', csvJson.filter(item=> {
             return item["Primary Object"] == "Revenue"
           }))
