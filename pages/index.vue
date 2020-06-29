@@ -13,7 +13,6 @@
       </template>
       <template v-else>
         <b-badge class="last-updated" variant="light" pill>as of {{ lastUpdated }}</b-badge>
-        <SocialMedia url="http://covid19response.gov.lr/revenue/" />
         <hr />
         <h2>Finances</h2>
         <b-progress :max="committed" variant="success" height="30px" show-label>
@@ -80,6 +79,7 @@
             </b-btn>
           </b-col>
         </b-row>
+        <SocialMedia url="http://covid19response.gov.lr/" />
       </template>
     </b-container>
   </div>

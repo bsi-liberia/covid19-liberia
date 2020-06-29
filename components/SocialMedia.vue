@@ -4,22 +4,16 @@
       <b-col class="mb-2">
         <ShareNetwork
         network="twitter"
-        url="http://covid19response.gov.lr/revenue/"
+        :url="url"
         title="A dashboard of data on the COVID-19 response in Liberia."
         twitter-user="mfdp_lib">
           <font-awesome-icon :icon="['fab', 'twitter']" />
-          <span>Share on Twitter</span>
         </ShareNetwork>
-      </b-col>
-    </b-row>
-    <b-row class="mb-2">
-      <b-col>
         <ShareNetwork
         network="facebook"
-        url="http://covid19response.gov.lr/revenue/"
+        :url="url"
         title="A dashboard of data on the COVID-19 response in Liberia.">
           <font-awesome-icon :icon="['fab', 'facebook']" />
-          <span>Share on Facebook</span>
         </ShareNetwork>
       </b-col>
     </b-row>
@@ -31,7 +25,7 @@ a[class^="share-network-"] {
   background-color: #333;
   border-radius: 3px;
   cursor: pointer;
-  margin: 0px 10px 10px 0;
+  margin: 0px 0px 10px 0;
   padding: 4px;
   font-size: 0.8rem;
 }
