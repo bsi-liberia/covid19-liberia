@@ -49,8 +49,8 @@ export default {
     PieChart
   },
   props: ['barChartData', 'labelField', 'valueField',
-    'pctField', 'valueLabel', 'valuePrecision', 'step',
-    'chartType', 'commitments', 'maximumValues', 'colour'],
+    'pctField', 'valueLabel', 'value2Label', 'value2Field', 'valuePrecision', 'step',
+    'chartType', 'commitments', 'maximumValues', 'colour', 'colour2', 'legend'],
   data() {
     return {
       colours: [
@@ -147,7 +147,10 @@ export default {
             return this.chartData.labels[tooltipItem[0].index]
           }),
           label: ((tooltipItem, data) => {
-            var label = this.valueLabel || '';
+            const makeLabel = () => {
+              return tooltipItem.datasetIndex == 0 ? this.valueLabel : this.value2Label
+            }
+            var label = makeLabel() || '';
 
             if (label) {
                 label += ': ';
@@ -175,23 +178,40 @@ export default {
           })
         }
       }
+      const yAxisLeft = {
+        id: 'y-axis-left',
+        position: 'left',
+        ticks: {
+          beginAtZero: true,
+          precision: this.valuePrecision,
+          stepSize: this.step ? this.step : undefined
+        },
+        scaleLabel: {
+          display: true,
+          labelString: this.valueLabel
+        },
+        gridLines: {
+          display: false
+        }
+      }
+      const yAxisRight = {
+        id: 'y-axis-right',
+        position: 'right',
+        ticks: {
+          beginAtZero: true,
+          precision: this.valuePrecision,
+          stepSize: this.step ? this.step : undefined
+        },
+        scaleLabel: {
+          display: true,
+          labelString: this.value2Label
+        },
+        gridLines: {
+          display: false
+        }
+      }
       const scales = {
-        yAxes: [
-          {
-            ticks: {
-              beginAtZero: true,
-              precision: this.valuePrecision,
-              stepSize: this.step ? this.step : undefined
-            },
-            scaleLabel: {
-              display: true,
-              labelString: this.valueLabel
-            },
-            gridLines: {
-              display: false
-            }
-          }
-        ],
+        yAxes: this.value2Label ? [yAxisLeft, yAxisRight] : [yAxisLeft],
         xAxes: [
           {
             ticks: {
@@ -219,7 +239,7 @@ export default {
       }
       return {
         maintainAspectRatio: false,
-        legend: this.chartType == 'pie' ? legend : null,
+        legend: (this.chartType == 'pie' || this.legend) ? legend : null,
         tooltips: tooltips,
         scales: this.chartType == 'bar' ? scales : null,
         layout: {
@@ -245,18 +265,38 @@ export default {
             font: {
               weight: 'bold'
             },
-            anchor: 'end'
+            anchor: 'end',
+            align: 'top'
           }
         }
       }
     },
     chartData() {
-      return {
-        datasets: [{
-          label: this.labelField,
+      const datasets = [{
+        label: this.valueLabel,
+        fill: true,
+        yAxisID: 'y-axis-left',
+        data: this.makeData(this.valueField),
+        backgroundColor: this.colour ? this.colour : this.colours,
+        datalabels: {
+          formatter: (value, context) => {
+            if (this.pctField) {
+              const pct = this.barChartData[context.dataIndex][this.pctField].toLocaleString(undefined, {
+                maximumFractionDigits: 1
+              })
+              return `${pct}%`
+            }
+            return value
+          }
+        }
+      }]
+      if (this.value2Label) {
+        const datasets2 = {
+          label: this.value2Label,
           fill: true,
-          data: this.makeData(),
-          backgroundColor: this.colour ? this.colour : this.colours,
+          yAxisID: 'y-axis-right',
+          data: this.makeData(this.value2Field),
+          backgroundColor: this.colour2 ? this.colour2 : this.colours,
           datalabels: {
             formatter: (value, context) => {
               if (this.pctField) {
@@ -268,20 +308,25 @@ export default {
               return value
             }
           }
-        }],
+        }
+        datasets.push(datasets2)
+      }
+
+      return {
+        datasets: datasets,
         labels: this.makeLabels(),
       }
     }
   },
   methods: {
-    makeData() {
+    makeData(valueField) {
       var _data = this.barChartData.map((ds) => {
-        return ds[this.valueField]
+        return ds[valueField]
       }).slice(0, this.maximumValues)
       if (this.barChartData.length > this.maximumValues) {
         _data.push(
           this.barChartData.slice(this.maximumValues).reduce((total, item) => {
-            total += item[this.valueField]
+            total += item[valueField]
             return total
           }, 0.0)
         )

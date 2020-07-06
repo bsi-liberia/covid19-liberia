@@ -37,8 +37,13 @@
         labelField="County"
         valueLabel="Number of cases"
         valueField="Cases"
+        value2Label="Number of deaths"
+        value2Field="Deaths"
         valuePrecision="0"
+        colour="#1f77b4"
+        colour2="#ff0000"
         chartType="bar"
+        :legend="true"
         :commitments="false"
         :maximumValues="100" />
       </template>
