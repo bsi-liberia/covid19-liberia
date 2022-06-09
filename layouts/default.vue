@@ -3,7 +3,7 @@
     <b-navbar toggleable="lg" type="dark" class="covid-navbar">
       <b-container>
         <b-navbar-brand :to="'/'" class="covid-brand">
-          <img src="/flag-lr.png" alt="Flag of Liberia" />
+          <img src="~/assets/flag-lr.png" alt="Flag of Liberia" />
           COVID-19 Dashboard</b-navbar-brand>
 
         <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
