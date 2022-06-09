@@ -14,9 +14,9 @@ export const state = () => ({
   lastUpdatedExpenditure: null,
   lastUpdatedInKind: null,
   lastUpdatedCases: null,
-  dataURL: "http://raw.githubusercontent.com/bsi-liberia/covid19-liberia-data/gh-pages/data.csv",
-  casesURL: "http://raw.githubusercontent.com/bsi-liberia/covid19-liberia-data/gh-pages/cases.csv",
-  countiesURL: "http://raw.githubusercontent.com/bsi-liberia/covid19-liberia-data/gh-pages/counties.csv"
+  dataURL: "https://raw.githubusercontent.com/bsi-liberia/covid19-liberia-data/gh-pages/data.csv",
+  casesURL: "https://raw.githubusercontent.com/bsi-liberia/covid19-liberia-data/gh-pages/cases.csv",
+  countiesURL: "https://raw.githubusercontent.com/bsi-liberia/covid19-liberia-data/gh-pages/counties.csv"
 })
 
 
