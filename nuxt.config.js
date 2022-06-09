@@ -18,7 +18,7 @@ export default {
       { name: 'twitter:site', content: '@mfdp_lib' },
       { name: 'twitter:title', content: 'COVID-19 Response Liberia' },
       { name: 'twitter:description', content: "A dashboard of data on the COVID-19 response in Liberia." },
-      { property: 'og:url', content: 'http://covid19response.gov.lr/' },
+      { property: 'og:url', content: 'https://bsi-liberia.github.io/covid19-liberia/' },
       { property: 'og:title', content: 'COVID-19 Response Liberia' },
       { property: 'og:type', content: 'website' },
       { property: 'og:description', content: "A dashboard of data on the COVID-19 response in Liberia." },
